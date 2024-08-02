@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">1001716518967</string>
+    <string name="google_api_key" translatable="false">AIzaSyDAf64JgRXP-zBAgs7I9G8EyhHm-NXmC1k</string>
+    <string name="google_app_id" translatable="false">1:1001716518967:android:beca09ff92fbae7753efb2</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDAf64JgRXP-zBAgs7I9G8EyhHm-NXmC1k</string>
+    <string name="google_storage_bucket" translatable="false">flutter-gympass.appspot.com</string>
+    <string name="project_id" translatable="false">flutter-gympass</string>
+</resources>

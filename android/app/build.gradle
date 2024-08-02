@@ -1,0 +1,73 @@
+plugins {
+    id "com.android.application"
+    id 'com.google.gms.google-services' // Plugin para Google Services
+    id "kotlin-android" // Plugin para Kotlin
+    id "dev.flutter.flutter-gradle-plugin" // Plugin para Flutter
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+android {
+    namespace "com.example.flutter_application_1"
+    compileSdk 34 // Actualiza al SDK de compilación más reciente
+
+    defaultConfig {
+        applicationId "com.example.flutter_application_1"
+        minSdkVersion 23 // Versión mínima requerida por Firebase
+        targetSdkVersion 34 // SDK objetivo más reciente
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false // Desactiva ProGuard si no es necesario
+            shrinkResources false // Desactiva el recurso de shrinking
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Puedes eliminar la línea de firma si estás usando `signingConfigs.debug`
+            // signingConfig signingConfigs.debug 
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.24" // Usa Kotlin 1.7.1
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24" // Usa Kotlin 1.7.1
+    implementation platform('com.google.firebase:firebase-bom:32.0.0') // BOM para Firebase
+    implementation 'com.google.firebase:firebase-analytics' // Firebase Analytics
+    implementation 'com.google.firebase:firebase-auth:23.0.0' // Firebase Auth
+    implementation 'com.google.firebase:firebase-firestore:24.0.0' // Firebase Firestore
+}
