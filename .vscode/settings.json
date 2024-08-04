@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "E:/Pablo/pablo/Flutter/Flutter app GYM/linux"
+    "cmake.sourceDirectory": "E:/Pablo/pablo/Flutter/Flutter app GYM/linux",
+    "java.compile.nullAnalysis.mode": "automatic"
 }

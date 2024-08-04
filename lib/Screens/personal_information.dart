@@ -24,32 +24,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   
   ValueNotifier<bool> hasChanged = ValueNotifier(false);
 
-  // void initState() {
-  //   super.initState();
-  //   contactInformation.text = user!.displayName!;
-  //   contactInformation.addListener(_onTextChanged);
-  // }
-
-  // void _onTextChanged() {
-  //   hasChanged.value = contactInformation.text != (user?.displayName ?? '');
-  // }
-
   
-
-  // Future<void> getPeople() async {
-  //   final name = await getPeoplePolenta();  // Llama a getPeople() para obtener el valor de 'name'.
-  //   if (name != null) {
-  //     setState(() {
-  //       contactInformation.text = name;  // Solo actualiza 'contactInformation' con el valor de 'name'.
-  //     });
-  //   }
-  // }
-   
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getPeople(); 
-  // }
   
   @override
   Widget build(BuildContext context) {
