@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Services/firebase_service.dart';
 
-
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -10,15 +9,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // final userS = FirebaseAuth.instance.currentUser;
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     context.watch<ProviderService>().providerGetUserData();
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,20 +25,19 @@ class _HomeState extends State<Home> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
-            } 
-            else {
+            } else {
               var gyms = snapshot.data;
               return ListView.builder(
                 itemCount: gyms?.length,
                 itemBuilder: (BuildContext context, int index) {
                   var gymData = gyms?[index];
-                  String name = gymData['name'] ?? 'Unnamed Gym'; // Manejo de nulos
+                  String name =
+                      gymData['name'] ?? 'Unnamed Gym'; // Manejo de nulos
                   return ListTile(
                     title: Text(
-                      name, 
-                      style: const TextStyle( 
-                        color: Colors.white
-                        ),),
+                      name,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   );
                 },
               );
