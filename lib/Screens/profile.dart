@@ -30,99 +30,103 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage("assets/image/Fondo_Sing_In.jpg"),
-              ),
-            ),
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              appBar: CustomAppBar(
-                text: userS.displayName!,
-                colorText: Colors.white,
-                automaticallyImplyLeading: false,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage("assets/image/Fondo_Sing_In.jpg"),
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: CustomAppBar(
+          text: userS.displayName!,
+          colorText: Colors.white,
+          automaticallyImplyLeading: false,
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.screenWidth * 0.05,
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: SizeConfig.screenHeight * 0.0223),
+              Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 0.05,
+                    horizontal: SizeConfig.screenWidth * 0.09),
+                child: customTextFormField(
+                  nameController,
+                  hintText: 'Nombre:',
                 ),
               ),
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.screenWidth * 0.09),
-                      child: customTextFormField(
-                        nameController,
-                        hintText: 'Nombre:',
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.screenWidth * 0.09),
-                      child: customTextFormField(
-                        usernameController,
-                        hintText: 'Nombre de usuario:',
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.screenWidth * 0.09),
-                      child: customTextFormField(
-                        nicknameController,
-                        hintText: 'Fecha de nacimiento:',
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                    CustomDropdownMenu(
-                      genderController: gController,
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.06),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.screenWidth * 0.09),
-                      child: customMaterialButtom(
-                        hintText: 'Datos Personales',
-                        icon: CupertinoIcons.person_crop_circle,
-                        colorOutline: Colors.white70,
-                        press: () {
-                          Navigator.pushNamed(
-                            context, '/personalInformation',
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.01115),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.screenWidth * 0.09),
-                      child: customMaterialButtom(
-                        hintText: 'Contraseña y seguridad',
-                        icon: CupertinoIcons.shield,
-                        colorOutline: Colors.white70,
-                        press: () {},
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.01115),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.screenWidth * 0.09),
-                      child: customMaterialButtom(
-                        hintText: 'Cerrar sesion',
-                        icon: CupertinoIcons.square_arrow_right,
-                        colorOutline: Colors.red,
-                        press: signOut,
-                      ),
-                    ),
-                  ],
+              SizedBox(height: SizeConfig.screenHeight * 0.0223),
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth * 0.09),
+                child: customTextFormField(
+                  usernameController,
+                  hintText: 'Nombre de usuario:',
                 ),
               ),
-            ),
-          );
-        }
+              SizedBox(height: SizeConfig.screenHeight * 0.0223),
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth * 0.09),
+                child: customTextFormField(
+                  nicknameController,
+                  hintText: 'Fecha de nacimiento:',
+                ),
+              ),
+              SizedBox(height: SizeConfig.screenHeight * 0.0223),
+              CustomDropdownMenu(
+                genderController: gController,
+              ),
+              SizedBox(height: SizeConfig.screenHeight * 0.06),
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth * 0.09),
+                child: customMaterialButtom(
+                  hintText: 'Datos Personales',
+                  icon: CupertinoIcons.person_crop_circle,
+                  colorOutline: Colors.white70,
+                  press: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/personalInformation',
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: SizeConfig.screenHeight * 0.01115),
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth * 0.09),
+                child: customMaterialButtom(
+                  hintText: 'Contraseña y seguridad',
+                  icon: CupertinoIcons.shield,
+                  colorOutline: Colors.white70,
+                  press: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/passwordAndSecurity',
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: SizeConfig.screenHeight * 0.01115),
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth * 0.09),
+                child: customMaterialButtom(
+                  hintText: 'Cerrar sesion',
+                  icon: CupertinoIcons.square_arrow_right,
+                  colorOutline: Colors.red,
+                  press: signOut,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
-  
-  
