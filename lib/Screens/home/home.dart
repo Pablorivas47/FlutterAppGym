@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/home/components/gym_card.dart';
+import 'package:flutter_application_1/Services/auth.dart';
+import 'package:flutter_application_1/Services/firebase_service.dart';
+import 'package:flutter_application_1/components/custom_app_bar.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 
 class Home extends StatefulWidget {
@@ -10,6 +15,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  User userS = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,8 +28,16 @@ class _HomeState extends State<Home> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: CustomAppBar(
+          text: "Hola ${userS.displayName!}",
+          colorText: Colors.white,
+          automaticallyImplyLeading: false,
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.screenWidth * 0.05,
+          ),
+        ),
         body: Column(children: [
-          SizedBox(height: SizeConfig.screenHeight * 0.1),
+          SizedBox(height: SizeConfig.screenHeight * 0.0223),
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.screenWidth * 0.104,
@@ -45,7 +60,7 @@ class _HomeState extends State<Home> {
                 GymCard(
                   name: 'Turnos',
                   onTap: () {
-                    Navigator.pushNamed(context, '/gyms');
+                    Navigator.pushNamed(context, '/shifts');
                   },
                   image: const AssetImage("assets/image/Fondo_Login.jpg"),
                   width: SizeConfig.screenWidth * 0.356,
@@ -64,7 +79,9 @@ class _HomeState extends State<Home> {
             ),
             child: GymCard(
               name: 'Metodos de pago',
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, '/paymentMethods');
+              },
               image: const AssetImage("assets/image/Fondo_Sing_In.jpg"),
               width: SizeConfig.screenWidth * 0.791,
               height: SizeConfig.screenHeight * 0.164,

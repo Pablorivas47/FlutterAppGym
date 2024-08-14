@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/forget_password.dart';
-import 'package:flutter_application_1/Screens/home/gymnasios.dart';
+import 'package:flutter_application_1/Screens/home/gyms.dart';
 import 'package:flutter_application_1/Screens/home/home.dart';
+import 'package:flutter_application_1/Screens/home/payment_methods.dart';
+import 'package:flutter_application_1/Screens/home/shifts.dart';
 import 'package:flutter_application_1/Screens/login.dart';
 import 'package:flutter_application_1/Screens/page_404.dart';
 import 'package:flutter_application_1/Screens/password_and_security.dart';
@@ -14,14 +16,10 @@ import 'package:flutter_application_1/components/custom_navigation_bar.dart';
 import 'package:flutter_application_1/components/custom_bottom_navigation_bar.dart';
 import 'package:flutter_application_1/components/custom_n_b.dart';
 
-export 'package:flutter_application_1/Screens/forget_password.dart';
-export 'package:flutter_application_1/Screens/login.dart';
 export 'package:flutter_application_1/Screens/page_404.dart';
-export 'package:flutter_application_1/Screens/sign_up.dart';
 export 'package:flutter_application_1/Screens/routine.dart';
 export 'package:flutter_application_1/Screens/profile.dart';
 export 'package:flutter_application_1/Screens/home/home.dart';
-export 'package:flutter_application_1/components/custom_bottom_navigation_bar.dart';
 
 final Map<String, WidgetBuilder> routes = {
   '/login': (context) {
@@ -65,5 +63,11 @@ final Map<String, WidgetBuilder> routes = {
   },
   '/gyms': (context) {
     return const Gyms();
+  },
+  '/paymentMethods': (context) {
+    return const PaymentMethods();
+  },
+  '/shifts': (context) {
+    return const Shifts();
   },
 };
