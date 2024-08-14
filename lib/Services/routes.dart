@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/forget_password.dart';
+import 'package:flutter_application_1/Screens/home/gymnasios.dart';
 import 'package:flutter_application_1/Screens/home/home.dart';
 import 'package:flutter_application_1/Screens/login.dart';
 import 'package:flutter_application_1/Screens/page_404.dart';
@@ -61,5 +62,8 @@ final Map<String, WidgetBuilder> routes = {
   },
   '/passwordAndSecurity': (context) {
     return const PasswordAndSecurity();
+  },
+  '/gyms': (context) {
+    return const Gyms();
   },
 };

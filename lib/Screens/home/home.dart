@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Services/firebase_service.dart';
+import 'package:flutter_application_1/Screens/home/components/gym_card.dart';
+import 'package:flutter_application_1/constants/size_config.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -20,30 +21,60 @@ class _HomeState extends State<Home> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: FutureBuilder(
-          future: getGYM(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else {
-              var gyms = snapshot.data;
-              return ListView.builder(
-                itemCount: gyms?.length,
-                itemBuilder: (BuildContext context, int index) {
-                  var gymData = gyms?[index];
-                  String name =
-                      gymData['name'] ?? 'Unnamed Gym'; // Manejo de nulos
-                  return ListTile(
-                    title: Text(
-                      name,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  );
-                },
-              );
-            }
-          },
-        ),
+        body: Column(children: [
+          SizedBox(height: SizeConfig.screenHeight * 0.1),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.screenWidth * 0.104,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GymCard(
+                  name: 'Gimnasios',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/gyms');
+                  },
+                  image: const AssetImage("assets/image/Fondo_Login.jpg"),
+                  width: SizeConfig.screenWidth * 0.356,
+                  height: SizeConfig.screenHeight * 0.164,
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.screenHeight * 0.075,
+                  ),
+                ),
+                GymCard(
+                  name: 'Turnos',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/gyms');
+                  },
+                  image: const AssetImage("assets/image/Fondo_Login.jpg"),
+                  width: SizeConfig.screenWidth * 0.356,
+                  height: SizeConfig.screenHeight * 0.164,
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.screenHeight * 0.075,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: SizeConfig.screenHeight * 0.0223),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.screenWidth * 0.104,
+            ),
+            child: GymCard(
+              name: 'Metodos de pago',
+              onTap: () {},
+              image: const AssetImage("assets/image/Fondo_Sing_In.jpg"),
+              width: SizeConfig.screenWidth * 0.791,
+              height: SizeConfig.screenHeight * 0.164,
+              padding: EdgeInsets.only(
+                top: SizeConfig.screenHeight * 0.075,
+              ),
+            ),
+          ),
+          SizedBox(height: SizeConfig.screenHeight * 0.0223),
+        ]),
       ),
     );
   }

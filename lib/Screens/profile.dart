@@ -1,9 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Services/auth.dart';
+import 'package:flutter_application_1/Services/firebase_service.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
-import 'package:flutter_application_1/components/custom_dropdown_menu.dart';
 import 'package:flutter_application_1/components/custom_text_field.dart';
 import 'package:flutter_application_1/components/custom_button.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
@@ -22,9 +23,27 @@ class _ProfileState extends State<Profile> {
   TextEditingController gController = TextEditingController();
   TextEditingController singoffController = TextEditingController();
   User userS = FirebaseAuth.instance.currentUser!;
+  Map<String, dynamic>? userData;
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
 
   Future<void> signOut() async {
     await AuthService().singOutLogin();
+  }
+
+  Future<void> loadUserData() async {
+    try {
+      DocumentSnapshot snapshot = await getUserData();
+      setState(() {
+        userData = snapshot.data() as Map<String, dynamic>;
+      });
+    } catch (e) {
+      print("Error loading user data: $e");
+    }
   }
 
   @override
@@ -39,7 +58,7 @@ class _ProfileState extends State<Profile> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: CustomAppBar(
-          text: userS.displayName!,
+          text: "Hola ${userS.displayName!}",
           colorText: Colors.white,
           automaticallyImplyLeading: false,
           padding: EdgeInsets.symmetric(
@@ -55,7 +74,9 @@ class _ProfileState extends State<Profile> {
                     horizontal: SizeConfig.screenWidth * 0.09),
                 child: customTextFormField(
                   nameController,
-                  hintText: 'Nombre:',
+                  enableText: false,
+                  labelText: "Nombre completo:",
+                  hintText: "${userData!['name']} ${userData!['apellido']} ",
                 ),
               ),
               SizedBox(height: SizeConfig.screenHeight * 0.0223),
@@ -64,7 +85,9 @@ class _ProfileState extends State<Profile> {
                     horizontal: SizeConfig.screenWidth * 0.09),
                 child: customTextFormField(
                   usernameController,
-                  hintText: 'Nombre de usuario:',
+                  enableText: false,
+                  labelText: "E-Mail:",
+                  hintText: userData!['email'],
                 ),
               ),
               SizedBox(height: SizeConfig.screenHeight * 0.0223),
@@ -73,14 +96,23 @@ class _ProfileState extends State<Profile> {
                     horizontal: SizeConfig.screenWidth * 0.09),
                 child: customTextFormField(
                   nicknameController,
-                  hintText: 'Fecha de nacimiento:',
+                  enableText: false,
+                  labelText: "Numero de telefono:",
+                  hintText: userData!['Numero de telefono'],
                 ),
               ),
               SizedBox(height: SizeConfig.screenHeight * 0.0223),
-              CustomDropdownMenu(
-                genderController: gController,
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth * 0.09),
+                child: customTextFormField(
+                  nicknameController,
+                  enableText: false,
+                  labelText: "Ubicacion:",
+                  hintText: "ubicacion  (hacerlo)",
+                ),
               ),
-              SizedBox(height: SizeConfig.screenHeight * 0.06),
+              SizedBox(height: SizeConfig.screenHeight * 0.1),
               Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.screenWidth * 0.09),

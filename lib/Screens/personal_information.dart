@@ -21,11 +21,36 @@ class _PersonalInformationState extends State<PersonalInformation> {
   TextEditingController ubication = TextEditingController();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   User userS = FirebaseAuth.instance.currentUser!;
+  Map<String, dynamic>? userData;
+  bool isLoading = true;
 
-  ValueNotifier<bool> hasChanged = ValueNotifier(false);
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async {
+    try {
+      DocumentSnapshot snapshot = await getUserData();
+      setState(() {
+        userData = snapshot.data() as Map<String, dynamic>;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error loading user data: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Container(
       decoration: const BoxDecoration(
           image: DecorationImage(
@@ -50,7 +75,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   ),
                   child: customTextFormField(
                     contactInformation,
-                    hintText: 'Informacion de contacto:',
+                    labelText: "Nombre:",
+                    hintText: userData!['name'],
                   ),
                 ),
                 SizedBox(
@@ -62,7 +88,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   ),
                   child: customTextFormField(
                     phoneNumber,
-                    hintText: 'Numero de telefono',
+                    labelText: "Apellido:",
+                    hintText: userData!['apellido'],
                     keyboardType: TextInputType.phone,
                   ),
                 ),
@@ -75,6 +102,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   ),
                   child: customTextFormField(
                     birthDate,
+                    labelText: "Fecha de nacimiento:",
                     hintText: 'Fecha de nacimiento',
                   ),
                 ),
@@ -87,12 +115,12 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   ),
                   child: customTextFormField(
                     ubication,
-                    hintText: 'Ubicacion:',
+                    labelText: "Ubicacion:",
+                    hintText: 'Ubicacion',
                   ),
                 ),
                 SizedBox(height: SizeConfig.screenHeight * 0.2),
                 CustomButton(
-                    //Button Change information
                     color: const Color(0xFF246B84),
                     padding: EdgeInsets.symmetric(
                       vertical: SizeConfig.screenHeight * 0.0175,

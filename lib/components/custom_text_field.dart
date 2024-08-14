@@ -75,11 +75,13 @@ TextFormField eMailTextFormField(
 TextFormField customTextFormField(
   TextEditingController controller, {
   required String hintText,
+  bool? enableText,
+  String? labelText,
   TextInputType? keyboardType,
 }) {
   return TextFormField(
-    keyboardType: keyboardType,
     controller: controller,
+    enabled: enableText,
     cursorColor: Colors.white,
     cursorWidth: SizeConfig.screenWidth * 0.003,
     style: TextStyle(
@@ -99,6 +101,21 @@ TextFormField customTextFormField(
         fontFamily: "Inter",
         fontSize: SizeConfig.screenHeight * 0.02,
         fontWeight: FontWeight.w200,
+      ),
+      labelText: labelText,
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      labelStyle: TextStyle(
+        color: const Color.fromARGB(255, 255, 255, 255),
+        fontFamily: "Inter",
+        fontSize: SizeConfig.screenHeight * 0.02,
+        fontWeight: FontWeight.w200,
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(
+            SizeConfig.screenWidth * 0.02), // Bordes redondeados
+        borderSide: const BorderSide(
+          color: Colors.white70, // Color del borde cuando está habilitado
+        ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(
