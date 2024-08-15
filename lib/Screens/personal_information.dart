@@ -194,14 +194,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
   Widget shimmerContainer({required double height, required double width}) {
     return Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
+      baseColor: Colors.grey.withOpacity(0.2),
+      highlightColor: Colors.grey.withOpacity(0.5),
       child: Container(
         height: height,
         width: width,
         decoration: BoxDecoration(
           color: Colors.grey,
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(SizeConfig.screenWidth * 0.02),
         ),
       ),
     );
