@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/page_404.dart';
 import 'package:flutter_application_1/Services/provider.dart';
 import 'package:flutter_application_1/Services/routes.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
@@ -31,13 +30,10 @@ class MyApp extends StatelessWidget {
     SizeConfig().init(context);
     return MaterialApp(
       theme: ThemeData(
-        //Change color of the handle
-
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           selectedItemColor:
               Color.fromARGB(255, 238, 199, 199), // Color del item seleccionado
         ),
-
         textSelectionTheme: const TextSelectionThemeData(
           selectionHandleColor: Colors.transparent,
         ),

@@ -210,7 +210,6 @@ class _Login extends State<Login> {
                   height: SizeConfig.screenHeight * 0.0223,
                 ),
                 customGesture(
-                  // GestureDetector Forget Password
                   forgetPassword,
                   text: '¿Olvidaste la contraseña?',
                   textColor: Colors.white,

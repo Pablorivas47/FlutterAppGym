@@ -10,14 +10,13 @@ class SignInOut extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: AuthService().authStateChanges, 
-      builder: (context, snapshot){
-        if(snapshot.hasData){
-          return const CustomNavigationBar();
-        }else {
-          return const Login(); 
-        }
-      }
-    );
+        stream: AuthService().authStateChanges,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const CustomNavigationBar();
+          } else {
+            return const Login();
+          }
+        });
   }
 }

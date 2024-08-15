@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Services/firebase_service.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:flutter_application_1/Screens/home/components/gyms_card.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
 import 'package:flutter_application_1/constants/size_config.dart';

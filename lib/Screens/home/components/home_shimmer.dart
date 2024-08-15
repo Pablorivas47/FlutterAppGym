@@ -1,19 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/home/components/gym_card.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
-import 'package:shimmer/shimmer.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  User userS = FirebaseAuth.instance.currentUser!;
+class HomeShimmer extends StatelessWidget {
+  const HomeShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +18,7 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: CustomAppBar(
-          text: "Hola ${userS.displayName!}",
+          text: "Hola",
           colorText: Colors.white,
           automaticallyImplyLeading: false,
           padding: EdgeInsets.symmetric(
@@ -43,29 +34,13 @@ class _HomeState extends State<Home> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GymCard(
-                  name: 'Gimnasios',
-                  onTap: () {
-                    Navigator.pushNamed(context, '/gyms');
-                  },
-                  image: const AssetImage("assets/image/Fondo_Login.jpg"),
+                shimmerContainer(
                   width: SizeConfig.screenWidth * 0.356,
                   height: SizeConfig.screenHeight * 0.164,
-                  padding: EdgeInsets.only(
-                    top: SizeConfig.screenHeight * 0.075,
-                  ),
                 ),
-                GymCard(
-                  name: 'Turnos',
-                  onTap: () {
-                    Navigator.pushNamed(context, '/shifts');
-                  },
-                  image: const AssetImage("assets/image/Fondo_Login.jpg"),
+                shimmerContainer(
                   width: SizeConfig.screenWidth * 0.356,
                   height: SizeConfig.screenHeight * 0.164,
-                  padding: EdgeInsets.only(
-                    top: SizeConfig.screenHeight * 0.075,
-                  ),
                 ),
               ],
             ),
@@ -75,21 +50,29 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.screenWidth * 0.104,
             ),
-            child: GymCard(
-              name: 'Metodos de pago',
-              onTap: () {
-                Navigator.pushNamed(context, '/paymentMethods');
-              },
-              image: const AssetImage("assets/image/Fondo_Sing_In.jpg"),
+            child: shimmerContainer(
               width: SizeConfig.screenWidth * 0.791,
               height: SizeConfig.screenHeight * 0.164,
-              padding: EdgeInsets.only(
-                top: SizeConfig.screenHeight * 0.075,
-              ),
             ),
           ),
           SizedBox(height: SizeConfig.screenHeight * 0.0223),
         ]),
+      ),
+    );
+  }
+
+  Widget shimmerContainer({required double height, required double width}) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      enabled: true,
+      child: Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+          color: Colors.grey,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
       ),
     );
   }
