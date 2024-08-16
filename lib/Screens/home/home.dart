@@ -57,7 +57,7 @@ class _HomeState extends State<Home> {
                 GymCard(
                   name: 'Turnos',
                   onTap: () {
-                    Navigator.pushNamed(context, '/shifts');
+                    Navigator.pushNamed(context, '/googleMaps');
                   },
                   image: const AssetImage("assets/image/Fondo_Login.jpg"),
                   width: SizeConfig.screenWidth * 0.356,

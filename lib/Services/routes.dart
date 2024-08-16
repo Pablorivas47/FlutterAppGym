@@ -12,9 +12,11 @@ import 'package:flutter_application_1/Screens/sign_in_up.dart';
 import 'package:flutter_application_1/Screens/sign_up.dart';
 import 'package:flutter_application_1/Screens/routine.dart';
 import 'package:flutter_application_1/Screens/profile.dart';
+import 'package:flutter_application_1/api/google-maps.dart';
 import 'package:flutter_application_1/components/custom_navigation_bar.dart';
 import 'package:flutter_application_1/components/custom_bottom_navigation_bar.dart';
 import 'package:flutter_application_1/components/custom_n_b.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 export 'package:flutter_application_1/Screens/page_404.dart';
 export 'package:flutter_application_1/Screens/routine.dart';
@@ -69,5 +71,8 @@ final Map<String, WidgetBuilder> routes = {
   },
   '/shifts': (context) {
     return const Shifts();
+  },
+  '/googleMaps': (context) {
+    return const GoogleMaps();
   },
 };
