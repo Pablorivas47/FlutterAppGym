@@ -116,7 +116,7 @@ class _ProfileState extends State<Profile> {
               Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.screenWidth * 0.09),
-                child: customMaterialButtom(
+                child: customMaterialButton(
                   hintText: 'Datos Personales',
                   icon: CupertinoIcons.person_crop_circle,
                   colorOutline: Colors.white70,
@@ -132,7 +132,7 @@ class _ProfileState extends State<Profile> {
               Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.screenWidth * 0.09),
-                child: customMaterialButtom(
+                child: customMaterialButton(
                   hintText: 'Contraseña y seguridad',
                   icon: CupertinoIcons.shield,
                   colorOutline: Colors.white70,
@@ -148,7 +148,7 @@ class _ProfileState extends State<Profile> {
               Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.screenWidth * 0.09),
-                child: customMaterialButtom(
+                child: customMaterialButton(
                   hintText: 'Cerrar sesion',
                   icon: CupertinoIcons.square_arrow_right,
                   colorOutline: Colors.red,

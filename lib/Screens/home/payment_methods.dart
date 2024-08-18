@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
+import 'package:flutter_application_1/components/stop_watch_timer.dart';
 
 class PaymentMethods extends StatefulWidget {
   const PaymentMethods({super.key});
