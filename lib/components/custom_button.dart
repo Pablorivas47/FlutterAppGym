@@ -2,6 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 
+CupertinoButton customCircleCupButton({
+  required VoidCallback onPressed,
+  required Image image,
+}) {
+  return CupertinoButton(
+    borderRadius: BorderRadius.circular(10),
+    padding: EdgeInsets.zero,
+    color: const Color.fromARGB(255, 255, 255, 255),
+    onPressed: onPressed,
+    child: image,
+  );
+}
+
 CupertinoButton customCupButtonTimer({
   required String text,
   required VoidCallback onPressed,

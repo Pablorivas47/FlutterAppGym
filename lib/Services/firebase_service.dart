@@ -68,6 +68,62 @@ Future<void> updatePerson(String name) async {
   }
 }
 
+Future<void> handlePayments(double amount) async {
+  User user = FirebaseAuth.instance.currentUser!;
+  final paymentDate = Timestamp.now();
+  final expirationDate = Timestamp.fromDate(paymentDate
+      .toDate()
+      .add(const Duration(days: 30))); // 30 días desde la fecha de pago
+
+  final docRef = FirebaseFirestore.instance.collection('people').doc(user.uid);
+
+  try {
+    final docSnapshot = await docRef.get();
+
+    if (docSnapshot.exists) {
+      // El documento existe, actualiza el documento
+      await docRef.update({
+        'Amount': amount,
+        'paymentDate': paymentDate,
+        'expirationDate': expirationDate,
+      });
+    } else {
+      // El documento no existe, crea un nuevo documento
+      await docRef.set({
+        'Amount': amount,
+        'paymentDate': paymentDate,
+        'expirationDate': expirationDate,
+      });
+    }
+  } catch (e) {
+    print("Error handling payment: $e");
+  }
+}
+
+Future<String> getExpirateDate() async {
+  User user = FirebaseAuth.instance.currentUser!;
+  final doc =
+      await FirebaseFirestore.instance.collection('people').doc(user.uid).get();
+
+  if (doc.exists) {
+    final data = doc.data();
+    final Timestamp? timestamp = data?['expirationDate'] as Timestamp?;
+
+    if (timestamp != null) {
+      final DateTime date = timestamp.toDate();
+
+      // Extraer año, mes y día
+      final day = date.day;
+      final month = date.month;
+      final year = date.year;
+
+      return '${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-${year}';
+    }
+  }
+
+  return ''; // Devuelve vacío si no hay datos para mostrar la fecha como string
+}
+
 //---------------------------  No Usados  ---------------------------
 
 Future<List> getPeople() async {

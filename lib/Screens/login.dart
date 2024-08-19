@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Services/auth.dart';
 import 'package:flutter_application_1/components/custom_gesture_dectector.dart';
@@ -30,6 +31,7 @@ class _Login extends State<Login> {
 
   void signInErrorValidation() {
     setState(() {
+      // Primero realizamos la validación local
       errorSingIn = signInErrorValidationMap(
         errorSingIn,
         eMailController.text,
@@ -39,7 +41,8 @@ class _Login extends State<Login> {
       if (errorSingIn.isNotEmpty) {
         startErrorTimerSignIn();
       } else {
-        timer?.cancel();
+        timer
+            ?.cancel(); // Cancelamos el temporizador si no hay errores de validación
       }
     });
   }
@@ -61,6 +64,7 @@ class _Login extends State<Login> {
     } on FirebaseAuthException {
       setState(() {
         logged = false;
+        signInErrorValidation();
       });
     }
   }
@@ -69,7 +73,6 @@ class _Login extends State<Login> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        //App background
         image: DecorationImage(
           fit: BoxFit.cover,
           image: AssetImage("assets/image/Fondo_Login.jpg"),
@@ -128,7 +131,7 @@ class _Login extends State<Login> {
                     fontWeightHintText: FontWeight.w300,
                     colorHintText: const Color.fromARGB(255, 0, 0, 0),
                     filled: true,
-                    fillColor: const Color.fromARGB(255, 238, 199, 199),
+                    fillColor: const Color.fromARGB(255, 255, 216, 216),
                     cursorColor: Colors.black,
                     colorTextIn: Colors.black,
                     colorIcon: Colors.black,
@@ -166,7 +169,7 @@ class _Login extends State<Login> {
                     fontWeightHintText: FontWeight.w300,
                     colorHintText: const Color.fromARGB(255, 0, 0, 0),
                     filled: true,
-                    fillColor: const Color.fromARGB(255, 238, 199, 199),
+                    fillColor: const Color.fromARGB(255, 255, 216, 216),
                     cursorColor: Colors.black,
                     colorTextIn: Colors.black,
                     colorIcon: Colors.black,
@@ -200,10 +203,12 @@ class _Login extends State<Login> {
                     alignment: Alignment.center,
                     text: "Iniciar sesion",
                     textColor: Colors.white,
-                    press: () {
+                    press: () async {
                       signInErrorValidation();
                       if (errorSingIn.isEmpty) {
-                        signInWithEmailAndPassword();
+                        await signInWithEmailAndPassword();
+                      } else {
+                        logged = true;
                       }
                     }),
                 SizedBox(
@@ -235,31 +240,57 @@ class _Login extends State<Login> {
                 SizedBox(
                   height: SizeConfig.screenHeight * 0.0223,
                 ),
-                CustomButton(
-                  //Button Continue with google
-                  color: const Color(0xFF246B84),
-                  text: "Continuar con google",
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(SizeConfig.screenWidth * 0.02)),
-                  padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.screenHeight * 0.0175,
-                      horizontal: SizeConfig.screenWidth * 0.15),
-                  alignment: Alignment.center,
-                  textColor: Colors.white,
-                  press: () {},
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    customCircleCupButton(
+                      onPressed: () {},
+                      image: Image.asset(
+                        "assets/image/Google.png",
+                        scale: SizeConfig.screenHeight * 0.04,
+                      ),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.screenHeight * 0.02,
+                    ),
+                    customCircleCupButton(
+                      onPressed: () {},
+                      image: Image.asset(
+                        "assets/image/Facebook.png",
+                        scale: SizeConfig.screenHeight * 0.06,
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: SizeConfig.screenHeight * 0.0223,
                 ),
-                customGesture(
-                  //Gesture Sing Up
-                  singUp,
-                  text: '¿No tenes cuenta aun? Registrate aqui',
-                  textColor: Colors.white,
-                  onTap: () async {
-                    await Navigator.pushNamed(context, '/singUp');
-                    setState(() {});
-                  },
+                RichText(
+                  text: TextSpan(
+                    text: '¿No tenes cuenta aun? ', // Texto normal
+                    style: TextStyle(
+                      color: Colors.white, // Color del texto normal
+                      fontFamily: "Inter",
+                      fontWeight: FontWeight.w400,
+                      fontSize:
+                          SizeConfig.screenWidth * 0.03, // Tamaño de fuente
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: 'Registrate aqui', // Texto con estilo diferente
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 140, 254),
+                          fontFamily: "Inter",
+                          fontWeight: FontWeight.w400,
+                          fontSize: SizeConfig.screenWidth * 0.03,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.pushNamed(context, '/singUp');
+                          },
+                      ),
+                    ],
+                  ),
                 ),
               ]),
             ),
