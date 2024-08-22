@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,22 +27,10 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    loadUserData();
   }
 
   Future<void> signOut() async {
     await AuthService().singOutLogin();
-  }
-
-  Future<void> loadUserData() async {
-    try {
-      DocumentSnapshot snapshot = await getUserData();
-      setState(() {
-        userData = snapshot.data() as Map<String, dynamic>;
-      });
-    } catch (e) {
-      print("Error loading user data: $e");
-    }
   }
 
   @override
@@ -65,98 +52,109 @@ class _ProfileState extends State<Profile> {
             horizontal: SizeConfig.screenWidth * 0.05,
           ),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: SizeConfig.screenHeight * 0.0223),
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.screenWidth * 0.09),
-                child: customTextFormField(
-                  nameController,
-                  enableText: false,
-                  labelText: "Nombre completo:",
-                  hintText: "${userData!['name']} ${userData!['apellido']} ",
+        body: FutureBuilder(
+          future: getUserData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              var userData = snapshot.data;
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 0.09),
+                      child: customTextFormField(
+                        nameController,
+                        enableText: false,
+                        labelText: "Nombre completo:",
+                        hintText:
+                            "${userData!['name']} ${userData['apellido']} ",
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 0.09),
+                      child: customTextFormField(
+                        usernameController,
+                        enableText: false,
+                        labelText: "E-Mail:",
+                        hintText: userData['email'],
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 0.09),
+                      child: customTextFormField(
+                        nicknameController,
+                        enableText: false,
+                        labelText: "Numero de telefono:",
+                        hintText: userData['Numero de telefono'],
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 0.09),
+                      child: customTextFormField(
+                        nicknameController,
+                        enableText: false,
+                        labelText: "Ubicacion:",
+                        hintText: "ubicacion  (hacerlo)",
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.1),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 0.09),
+                      child: customMaterialButton(
+                        hintText: 'Datos Personales',
+                        icon: CupertinoIcons.person_crop_circle,
+                        colorOutline: Colors.white70,
+                        press: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/personalInformation',
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.01115),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 0.09),
+                      child: customMaterialButton(
+                        hintText: 'Contraseña y seguridad',
+                        icon: CupertinoIcons.shield,
+                        colorOutline: Colors.white70,
+                        press: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/passwordAndSecurity',
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.01115),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 0.09),
+                      child: customMaterialButton(
+                        hintText: 'Cerrar sesion',
+                        icon: CupertinoIcons.square_arrow_right,
+                        colorOutline: Colors.red,
+                        press: signOut,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: SizeConfig.screenHeight * 0.0223),
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.screenWidth * 0.09),
-                child: customTextFormField(
-                  usernameController,
-                  enableText: false,
-                  labelText: "E-Mail:",
-                  hintText: userData!['email'],
-                ),
-              ),
-              SizedBox(height: SizeConfig.screenHeight * 0.0223),
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.screenWidth * 0.09),
-                child: customTextFormField(
-                  nicknameController,
-                  enableText: false,
-                  labelText: "Numero de telefono:",
-                  hintText: userData!['Numero de telefono'],
-                ),
-              ),
-              SizedBox(height: SizeConfig.screenHeight * 0.0223),
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.screenWidth * 0.09),
-                child: customTextFormField(
-                  nicknameController,
-                  enableText: false,
-                  labelText: "Ubicacion:",
-                  hintText: "ubicacion  (hacerlo)",
-                ),
-              ),
-              SizedBox(height: SizeConfig.screenHeight * 0.1),
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.screenWidth * 0.09),
-                child: customMaterialButton(
-                  hintText: 'Datos Personales',
-                  icon: CupertinoIcons.person_crop_circle,
-                  colorOutline: Colors.white70,
-                  press: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/personalInformation',
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: SizeConfig.screenHeight * 0.01115),
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.screenWidth * 0.09),
-                child: customMaterialButton(
-                  hintText: 'Contraseña y seguridad',
-                  icon: CupertinoIcons.shield,
-                  colorOutline: Colors.white70,
-                  press: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/passwordAndSecurity',
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: SizeConfig.screenHeight * 0.01115),
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.screenWidth * 0.09),
-                child: customMaterialButton(
-                  hintText: 'Cerrar sesion',
-                  icon: CupertinoIcons.square_arrow_right,
-                  colorOutline: Colors.red,
-                  press: signOut,
-                ),
-              ),
-            ],
-          ),
+              );
+            }
+          },
         ),
       ),
     );

@@ -117,7 +117,7 @@ Future<String> getExpirateDate() async {
       final month = date.month;
       final year = date.year;
 
-      return '${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-${year}';
+      return '${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-$year';
     }
   }
 

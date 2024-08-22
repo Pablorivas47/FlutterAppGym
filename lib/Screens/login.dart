@@ -55,18 +55,20 @@ class _Login extends State<Login> {
     });
   }
 
-  Future<void> signInWithEmailAndPassword() async {
+  Future<bool> signInWithEmailAndPassword() async {
     try {
       await AuthService().loginEmailAndPassword(
         email: eMailController.text,
         password: passwordController.text,
       );
+      logged = true;
     } on FirebaseAuthException {
       setState(() {
         logged = false;
         signInErrorValidation();
       });
     }
+    return logged;
   }
 
   @override
@@ -206,7 +208,9 @@ class _Login extends State<Login> {
                     press: () async {
                       signInErrorValidation();
                       if (errorSingIn.isEmpty) {
-                        await signInWithEmailAndPassword();
+                        if (!await signInWithEmailAndPassword()) {
+                          logged = true;
+                        }
                       } else {
                         logged = true;
                       }

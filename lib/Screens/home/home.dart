@@ -42,7 +42,6 @@ class _HomeState extends State<Home> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return shimmerLoadingEffect();
             } else {
-              // Muestra los datos una vez que se han recuperado
               return SingleChildScrollView(
                 child: Column(children: [
                   SizedBox(height: SizeConfig.screenHeight * 0.0223),

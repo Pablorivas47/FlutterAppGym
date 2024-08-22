@@ -36,9 +36,9 @@ class _PaymentMethodsState extends State<PaymentMethods> {
         body: Center(
           child: customCupButtonTimer(
               text: 'Pagar',
-              onPressed: () {
-                handlePayment();
-                Navigator.pushNamed(context, '/home');
+              onPressed: () async {
+                await handlePayment();
+                Navigator.pushNamed(context, '/customNavBar');
               }),
         ),
       ),
