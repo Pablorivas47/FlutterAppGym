@@ -38,6 +38,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
               text: 'Pagar',
               onPressed: () async {
                 await handlePayment();
+                // ignore: use_build_context_synchronously
                 Navigator.pushNamed(context, '/customNavBar');
               }),
         ),

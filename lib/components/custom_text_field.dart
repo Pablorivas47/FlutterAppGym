@@ -77,7 +77,10 @@ TextFormField customTextFormField(
   required String hintText,
   bool? enableText,
   String? labelText,
+  Icon? icon,
   TextInputType? keyboardType,
+  bool? filled,
+  Color? fillColor,
 }) {
   return TextFormField(
     controller: controller,
@@ -91,6 +94,9 @@ TextFormField customTextFormField(
       fontWeight: FontWeight.w400,
     ),
     decoration: InputDecoration(
+      filled: filled,
+      fillColor: fillColor,
+      prefixIcon: icon,
       contentPadding: EdgeInsets.symmetric(
         horizontal: SizeConfig.screenWidth * 0.04,
         vertical: SizeConfig.screenHeight * 0.02,
@@ -129,6 +135,65 @@ TextFormField customTextFormField(
         borderSide: const BorderSide(
           color: Color.fromARGB(255, 238, 199, 199),
         ),
+      ),
+    ),
+  );
+}
+
+TextFormField personalizeTextFormField(TextEditingController controller,
+    {required String hintText,
+    bool? enableText,
+    String? labelText,
+    Icon? icon,
+    TextInputType? keyboardType,
+    bool? filled,
+    Color? fillColor,
+    Color? colorHintText,
+    Color? colorIcon,
+    Color? labelColor,
+    Color? colorText}) {
+  return TextFormField(
+    controller: controller,
+    enabled: enableText,
+    cursorColor: Colors.white,
+    cursorWidth: SizeConfig.screenWidth * 0.003,
+    style: TextStyle(
+      color: colorText,
+      fontFamily: "Inter",
+      fontSize: SizeConfig.screenHeight * 0.02,
+      fontWeight: FontWeight.w400,
+    ),
+    decoration: InputDecoration(
+      filled: filled,
+      fillColor: fillColor,
+      prefixIcon: icon,
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.screenWidth * 0.04,
+        vertical: SizeConfig.screenHeight * 0.02,
+      ),
+      hintText: hintText,
+      hintStyle: TextStyle(
+        color: colorHintText,
+        fontFamily: "Inter",
+        fontSize: SizeConfig.screenHeight * 0.02,
+        fontWeight: FontWeight.w300,
+      ),
+      labelText: labelText,
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      labelStyle: TextStyle(
+        color: labelColor,
+        fontFamily: "Inter",
+        fontSize: SizeConfig.screenHeight * 0.02,
+        fontWeight: FontWeight.w300,
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10), // Bordes redondeados
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10), // Bordes redondeados
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
       ),
     ),
   );

@@ -1,8 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 
 // ignore: must_be_immutable
-class GymCard extends StatelessWidget {
+class HomeCard extends StatelessWidget {
   final String name;
   final ImageProvider<Object> image;
   final Function()? onTap;
@@ -12,7 +13,7 @@ class GymCard extends StatelessWidget {
   double? heightFactor;
   final AlignmentGeometry alignmentImage;
 
-  GymCard({
+  HomeCard({
     super.key,
     required this.name,
     required this.onTap,
@@ -32,7 +33,7 @@ class GymCard extends StatelessWidget {
         width: width,
         height: height,
         decoration: BoxDecoration(
-          //|color: Colors.red,
+          //color: Colors.red,
           borderRadius: BorderRadius.circular(20),
         ),
         duration: const Duration(milliseconds: 300),
@@ -55,16 +56,24 @@ class GymCard extends StatelessWidget {
             ),
             Padding(
               padding: paddingText,
-              child: Center(
-                child: Text(
-                  name,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: SizeConfig.screenHeight * 0.02,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      name,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: SizeConfig.screenHeight * 0.02,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Icon(
+                      CupertinoIcons.plus_app,
+                      color: Colors.white,
+                      size: SizeConfig.screenHeight * 0.02,
+                    ),
+                  ]),
             ),
           ],
         ),
