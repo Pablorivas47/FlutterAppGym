@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/home/components/gym_card.dart';
+import 'package:flutter_application_1/Screens/home/components/home_card.dart';
+import 'package:flutter_application_1/Screens/home/gym_information.dart';
 import 'package:flutter_application_1/Services/firebase_service.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
 import 'package:flutter_application_1/components/custom_text_field.dart';
@@ -20,138 +21,216 @@ class _GymsState extends State<Gyms> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage("assets/image/Fondo_Sing_In.jpg"),
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: const CustomAppBar(
-          text: 'Gimnasios',
-          colorText: Colors.white,
-          automaticallyImplyLeading: true,
-          padding: EdgeInsets.zero,
-        ),
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.screenWidth * 0.104,
-                    ),
-                    child: personalizeTextFormField(
-                      filterController,
-                      filled: true,
-                      fillColor: Colors.white,
-                      colorHintText: Colors.black,
-                      colorIcon: Colors.black,
-                      hintText: "Buscar",
-                      icon: Icon(
-                        CupertinoIcons.search,
-                        color: Colors.black,
-                        size: SizeConfig.screenHeight * 0.03,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                  const FilterButton(),
-                  SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                ],
+    return FutureBuilder(
+      future: getGyms(),
+      builder: (context, snapshot) {
+        var gyms = snapshot.data;
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return griedViewShimmer();
+        } else {
+          return Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage("assets/image/Fondo_Sing_In.jpg"),
               ),
             ),
-            SliverToBoxAdapter(
-              child: FutureBuilder(
-                future: getGYM(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const GriedViewShimmer();
-                  } else {
-                    var gyms = snapshot.data;
-                    return Padding(
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: const CustomAppBar(
+                text: 'Gimnasios',
+                colorText: Colors.white,
+                automaticallyImplyLeading: true,
+                padding: EdgeInsets.zero,
+              ),
+              body: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.screenWidth * 0.104,
+                          ),
+                          child: personalizeTextFormField(
+                            filterController,
+                            filled: true,
+                            fillColor: Colors.white,
+                            colorHintText: Colors.black,
+                            colorIcon: Colors.black,
+                            hintText: "Buscar",
+                            icon: Icon(
+                              CupertinoIcons.search,
+                              color: Colors.black,
+                              size: SizeConfig.screenHeight * 0.03,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                        const FilterButton(),
+                        SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                      ],
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.screenWidth * 0.104,
                       ),
-                      child: GridView.builder(
-                        //physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // Número de columnas
-                          crossAxisSpacing: SizeConfig.screenWidth *
-                              0.078, // Espacio horizontal
-                          mainAxisSpacing: SizeConfig.screenHeight *
-                              0.03, // Espacio vertical
-                        ),
-                        itemCount: gyms?.length ?? 0,
-                        itemBuilder: (BuildContext context, int index) {
-                          var gymData = gyms?[index];
-                          String name = gymData['name'] ??
-                              'Unnamed Gym'; // Manejo de nulos
-                          String imageUrl = gymData['image'];
-                          return GymCard(
-                            alignmentImage: Alignment.center,
-                            name: name,
-                            onTap: () {},
-                            image: NetworkImage(imageUrl),
-                            paddingText: EdgeInsets.only(
-                              top: SizeConfig.screenHeight * 0.075,
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  }
-                },
+                      child: gridView(gyms),
+                    ),
+                  )
+                ],
               ),
             ),
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 }
 
-class GriedViewShimmer extends StatelessWidget {
-  const GriedViewShimmer({
-    super.key,
-  });
+Widget gridView(gyms) {
+  return GridView.builder(
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2, // Número de columnas
+      crossAxisSpacing: SizeConfig.screenWidth * 0.125, // Espacio horizontal
+      mainAxisSpacing: SizeConfig.screenHeight * 0.02, // Espacio vertical
+      mainAxisExtent: SizeConfig.screenHeight * 0.2,
+    ),
+    itemCount: gyms?.length ?? 0,
+    itemBuilder: (BuildContext context, int index) {
+      var gymData = gyms?[index];
+      String name = gymData['name'] ?? 'Unnamed Gym'; // Manejo de nulos
+      String imageUrl = gymData['images'][0];
+      return HomeCard(
+        alignmentImage: Alignment.topCenter,
+        heightFactor: 0.75,
+        paddingText: EdgeInsets.only(
+          top: SizeConfig.screenHeight * 0.17,
+        ),
+        name: name,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return InformationGym(
+                name: name,
+                imagesUrl: gymData['images'],
+                descripcion: gymData['description'],
+              );
+            }),
+          );
+        },
+        image: NetworkImage(imageUrl),
+      );
+    },
+  );
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: EdgeInsets.only(
-        left: SizeConfig.screenWidth * 0.104,
-        right: SizeConfig.screenWidth * 0.104,
-        top: SizeConfig.screenHeight * 0.09,
+Widget griedViewShimmer() {
+  return Container(
+    decoration: const BoxDecoration(
+        image: DecorationImage(
+      fit: BoxFit.cover,
+      image: AssetImage("assets/image/Fondo_Sing_In.jpg"),
+    )),
+    child: Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: const CustomAppBar(
+        text: 'Gimnasios',
+        colorText: Colors.white,
+        automaticallyImplyLeading: true,
+        padding: EdgeInsets.zero,
       ),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Número de columnas
-        crossAxisSpacing:
-            SizeConfig.screenWidth * 0.078, // Espacio horizontal entre tarjetas
-        mainAxisSpacing:
-            SizeConfig.screenHeight * 0.049, // Espacio vertical entre tarjetas
-      ),
-      itemCount: 4, // Número de tarjetas de shimmer
-      itemBuilder: (BuildContext context, int index) {
-        return Shimmer.fromColors(
-          baseColor: Colors.grey.withOpacity(0.2),
-          highlightColor: Colors.grey.withOpacity(0.5),
-          child: Container(
-            width: SizeConfig.screenWidth * 0.356,
-            height: SizeConfig.screenHeight * 0.164,
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius:
-                  BorderRadius.circular(SizeConfig.screenWidth * 0.05),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.screenWidth * 0.104,
+              ),
+              child: Column(
+                children: [
+                  SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                  shimmerContainer(
+                    height: SizeConfig.screenHeight * 0.08,
+                    sizeBorderRadius: 10,
+                  ),
+                  SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                  Row(
+                    children: [
+                      shimmerContainer(
+                        height: SizeConfig.screenHeight * 0.025,
+                        width: SizeConfig.screenWidth * 0.175,
+                        sizeBorderRadius: 5,
+                      ),
+                      SizedBox(width: SizeConfig.screenWidth * 0.0223),
+                      shimmerContainer(
+                        height: SizeConfig.screenHeight * 0.025,
+                        width: SizeConfig.screenWidth * 0.175,
+                        sizeBorderRadius: 5,
+                      ),
+                      SizedBox(width: SizeConfig.screenWidth * 0.0223),
+                      shimmerContainer(
+                        height: SizeConfig.screenHeight * 0.025,
+                        width: SizeConfig.screenWidth * 0.175,
+                        sizeBorderRadius: 5,
+                      ),
+                      SizedBox(width: SizeConfig.screenWidth * 0.0223),
+                      shimmerContainer(
+                        height: SizeConfig.screenHeight * 0.025,
+                        width: SizeConfig.screenWidth * 0.175,
+                        sizeBorderRadius: 5,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                ],
+              ),
             ),
           ),
-        );
-      },
-    );
-  }
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.screenWidth * 0.104,
+              ),
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: SizeConfig.screenWidth * 0.1,
+                  mainAxisSpacing: SizeConfig.screenHeight * 0.04,
+                ),
+                itemCount: 6,
+                itemBuilder: (BuildContext context, int index) {
+                  return shimmerContainer(sizeBorderRadius: 20);
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget shimmerContainer(
+    {double? height, double? width, required double sizeBorderRadius}) {
+  return Shimmer.fromColors(
+    baseColor: Colors.grey.withOpacity(0.2),
+    highlightColor: Colors.grey.withOpacity(0.5),
+    child: Container(
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        color: Colors.grey,
+        borderRadius: BorderRadius.circular(sizeBorderRadius),
+      ),
+    ),
+  );
 }

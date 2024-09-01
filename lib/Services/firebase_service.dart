@@ -35,6 +35,33 @@ Future<void> saveEmailPasswordUser(String uid, String displayName,
 //   return gyms;
 // }
 
+Future<List<Map<String, dynamic>>> getGyms() async {
+  List<Map<String, dynamic>> gyms = [];
+  CollectionReference collectionReferenceGyms = db.collection('gimnasios');
+  QuerySnapshot queryGyms = await collectionReferenceGyms.get();
+
+  for (var documento in queryGyms.docs) {
+    final Map<String, dynamic> data = documento.data() as Map<String, dynamic>;
+
+    // Verifica si el array de imágenes existe y tiene al menos un elemento
+    List<dynamic> images = [];
+    if (data.containsKey('images') && data['images'] is List) {
+      images = data['images']; // Obtén todas las imágenes
+    }
+
+    // Crea un mapa para el gimnasio
+    final gym = {
+      "name": data["name"],
+      "id": documento.id,
+      "images": images, // Añade la lista de imágenes al mapa
+      "description": data["description"],
+    };
+    gyms.add(gym);
+  }
+
+  return gyms;
+}
+
 Future<List> getGYM() async {
   // Regresa una lista de gimnasios desde la base de datos
   List gyms = [];
@@ -49,7 +76,7 @@ Future<List> getGYM() async {
     if (data.containsKey('images') &&
         data['images'] is List &&
         data['images'].isNotEmpty) {
-      imageUrl = data['images'][0]; // Obtén la primera imagen
+      imageUrl = data['images'][0];
     }
 
     final gym = {

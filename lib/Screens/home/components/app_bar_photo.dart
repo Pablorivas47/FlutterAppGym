@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class AppBarPhoto extends StatelessWidget implements PreferredSizeWidget {
   final String text;
-  final Color? colorText;
   final bool automaticallyImplyLeading;
   final EdgeInsets padding;
-  const CustomAppBar({
+  const AppBarPhoto({
     super.key,
     required this.text,
-    required this.colorText,
     required this.automaticallyImplyLeading,
     required this.padding,
   });
@@ -19,19 +17,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       automaticallyImplyLeading: automaticallyImplyLeading,
       backgroundColor: Colors.transparent,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(25))),
       iconTheme: const IconThemeData(
         color: Colors.white,
       ),
-      title: Padding(
-        padding: padding,
-        child: Text(text,
-            style: TextStyle(
-              color: colorText,
-              fontFamily: "Inter",
-              fontSize: SizeConfig.screenWidth * 0.045,
-              fontWeight: FontWeight.w600,
-            )),
-      ),
+      title: Text(text,
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: "Inter",
+            fontSize: SizeConfig.screenWidth * 0.045,
+            fontWeight: FontWeight.w600,
+          )),
     );
   }
 
@@ -39,7 +36,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize {
     return Size(
       SizeConfig.screenWidth,
-      SizeConfig.screenHeight * 0.08,
+      SizeConfig.screenHeight * 0.1,
     );
   }
 }

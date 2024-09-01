@@ -149,7 +149,7 @@ class _HomeState extends State<Home> {
                           HomeCard(
                             name: 'Pagos',
                             onTap: () {
-                              //Navigator.pushNamed(context, '/googleMaps');
+                              Navigator.pushNamed(context, '/paymentMethods');
                             },
                             image: const AssetImage("assets/image/Pago.png"),
                             heightFactor: 0.75,

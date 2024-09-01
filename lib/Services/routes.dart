@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/forget_password.dart';
+import 'package:flutter_application_1/Screens/home/gym_information.dart';
 import 'package:flutter_application_1/Screens/home/gyms.dart';
 import 'package:flutter_application_1/Screens/home/home.dart';
 import 'package:flutter_application_1/Screens/home/payment_methods.dart';
