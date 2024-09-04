@@ -123,9 +123,7 @@ class _HomeState extends State<Home> {
                           ),
                           HomeCard(
                             name: 'Turnos',
-                            onTap: () {
-                              //Navigator.pushNamed(context, '/googleMaps');
-                            },
+                            onTap: () {},
                             image: const AssetImage("assets/image/Rutina.jpg"),
                             heightFactor: 0.75,
                             alignmentImage: Alignment.topCenter,

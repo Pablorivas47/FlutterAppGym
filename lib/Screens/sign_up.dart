@@ -225,7 +225,6 @@ class _SignUpState extends State<SignUp> {
                 ),
                 FormValidationMap(
                   errors: errorsSingUp,
-                  //controller: gController,
                   textController: 'gender',
                   padding: EdgeInsets.only(
                       left: SizeConfig.screenWidth * 0.075,

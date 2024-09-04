@@ -25,26 +25,26 @@ class _PersonalInformationState extends State<PersonalInformation> {
   Map<String, dynamic>? userData;
   bool isLoading = true;
 
-  @override
-  void initState() {
-    super.initState();
-    loadUserData();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   loadUserData();
+  // }
 
-  Future<void> loadUserData() async {
-    try {
-      DocumentSnapshot snapshot = await getUserData();
-      setState(() {
-        userData = snapshot.data() as Map<String, dynamic>;
-        isLoading = false;
-      });
-    } catch (e) {
-      print("Error loading user data: $e");
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  // Future<void> loadUserData() async {
+  //   try {
+  //     DocumentSnapshot snapshot = await providerGetUserData();
+  //     setState(() {
+  //       userData = snapshot.data() as Map<String, dynamic>;
+  //       isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     print("Error loading user data: $e");
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

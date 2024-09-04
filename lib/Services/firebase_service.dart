@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/objetos/user.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 final user = FirebaseAuth.instance.currentUser;
@@ -12,28 +13,12 @@ Future<void> saveEmailPasswordUser(String uid, String displayName,
     String nickName, String email, String gender, String phoneNumber) async {
   await db.collection('people').doc(uid).set({
     'name': displayName,
-    'apellido': nickName,
+    'nickName': nickName,
     'email': email,
-    'sexo': gender,
-    'Numero de telefono': phoneNumber,
+    'gender': gender,
+    'phoneNumber': phoneNumber,
   });
 }
-
-// Future<List> getGYM() async {
-//   // regresa una lista de la base de datos
-//   List gyms = [];
-//   CollectionReference collectionReferenceGyms = db.collection('gimnasios');
-//   QuerySnapshot queryGyms = await collectionReferenceGyms.get();
-//   for (var documento in queryGyms.docs) {
-//     final Map<String, dynamic> data = documento.data() as Map<String, dynamic>;
-//     final gym = {
-//       "name": data["name"],
-//       "id": documento.id,
-//     };
-//     gyms.add(gym);
-//   }
-//   return gyms;
-// }
 
 Future<List<Map<String, dynamic>>> getGyms() async {
   List<Map<String, dynamic>> gyms = [];
@@ -104,12 +89,15 @@ Future<List> getUser(String email) async {
   return userData;
 }
 
-Future<DocumentSnapshot> getUserData() async {
-  User user = FirebaseAuth.instance.currentUser!;
-  DocumentSnapshot userData =
-      await FirebaseFirestore.instance.collection('people').doc(user.uid).get();
+Future<IUser> getUserData() async {
+  final _user = FirebaseAuth.instance.currentUser!;
+  DocumentSnapshot snapshot = await FirebaseFirestore.instance
+      .collection('people')
+      .doc(_user.uid)
+      .get();
 
-  return userData;
+  IUser user = await IUser.fromFirestore(snapshot);
+  return user;
 }
 
 Future<void> updatePerson(String name) async {
@@ -138,14 +126,14 @@ Future<void> handlePayments(double amount) async {
     if (docSnapshot.exists) {
       // El documento existe, actualiza el documento
       await docRef.update({
-        'Amount': amount,
+        'amount': amount,
         'paymentDate': paymentDate,
         'expirationDate': expirationDate,
       });
     } else {
       // El documento no existe, crea un nuevo documento
       await docRef.set({
-        'Amount': amount,
+        'amount': amount,
         'paymentDate': paymentDate,
         'expirationDate': expirationDate,
       });
