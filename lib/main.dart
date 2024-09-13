@@ -41,13 +41,6 @@ class MyApp extends StatelessWidget {
       title: "GYM PASS",
       initialRoute: '/signInOut',
       routes: routes,
-      onGenerateRoute: (setting) {
-        return MaterialPageRoute(
-          builder: (context) {
-            return const Page404();
-          },
-        );
-      },
     );
   }
 }

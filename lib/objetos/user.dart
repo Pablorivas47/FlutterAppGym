@@ -6,9 +6,10 @@ class IUser {
   String numberPhone;
   String nickName;
   String gender;
-  Timestamp expirationDate;
-  Timestamp paymentDate;
-  num amount;
+  Timestamp? expirationDate;
+  Timestamp? paymentDate;
+  num? amount;
+  GeoPoint? location;
 
   IUser({
     required this.email,
@@ -16,9 +17,10 @@ class IUser {
     required this.numberPhone,
     required this.nickName,
     required this.gender,
-    required this.expirationDate,
-    required this.paymentDate,
-    required this.amount,
+    this.expirationDate,
+    this.paymentDate,
+    this.amount,
+    this.location,
   });
 
   static Future<IUser> fromFirestore(DocumentSnapshot doc) async {
@@ -33,6 +35,7 @@ class IUser {
       expirationDate: data['expirationDate'],
       paymentDate: data['paymentDate'],
       amount: data['amount'],
+      location: data['location'],
     );
   }
 }

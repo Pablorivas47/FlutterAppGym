@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Services/firebase_service.dart';
+import 'package:flutter_application_1/Services/provider.dart';
 import 'package:flutter_application_1/components/custom_button.dart';
 import 'package:flutter_application_1/components/custom_text_field.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PersonalInformation extends StatefulWidget {
@@ -20,128 +19,100 @@ class _PersonalInformationState extends State<PersonalInformation> {
   TextEditingController phoneNumber = TextEditingController();
   TextEditingController birthDate = TextEditingController();
   TextEditingController ubication = TextEditingController();
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  User userS = FirebaseAuth.instance.currentUser!;
-  Map<String, dynamic>? userData;
-  bool isLoading = true;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   loadUserData();
-  // }
-
-  // Future<void> loadUserData() async {
-  //   try {
-  //     DocumentSnapshot snapshot = await providerGetUserData();
-  //     setState(() {
-  //       userData = snapshot.data() as Map<String, dynamic>;
-  //       isLoading = false;
-  //     });
-  //   } catch (e) {
-  //     print("Error loading user data: $e");
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return shimmerLoadingEffect();
-    }
-
-    return Container(
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-        fit: BoxFit.cover,
-        image: AssetImage("assets/image/Fondo_Sing_In.jpg"),
-      )),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: const CustomAppBar(
-          text: 'Datos Personales',
-          colorText: Colors.white,
-          automaticallyImplyLeading: true,
-          padding: EdgeInsets.zero,
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: SizeConfig.screenHeight * 0.0223),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 0.09,
-                ),
-                child: customTextFormField(
-                  contactInformation,
-                  labelText: "Nombre:",
-                  hintText: userData!['name'],
+    return FutureBuilder(
+      future: context.watch<ProviderService>().providerGetUserData(),
+      builder: (context, snapshot) {
+        if (context.watch<ProviderService>().userData == null) {
+          return shimmerLoadingEffect();
+        } else {
+          return Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage("assets/image/Fondo_Sing_In.jpg"),
+            )),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: const CustomAppBar(
+                text: 'Datos Personales',
+                colorText: Colors.white,
+                automaticallyImplyLeading: true,
+                padding: EdgeInsets.zero,
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.0223,
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.screenWidth * 0.09,
+                      ),
+                      child: customTextFormField(
+                        phoneNumber,
+                        labelText: "Numero de telefono:",
+                        hintText: context
+                            .watch<ProviderService>()
+                            .userData!
+                            .numberPhone,
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.0223,
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.screenWidth * 0.09,
+                      ),
+                      child: customTextFormField(
+                        birthDate,
+                        labelText: "Fecha de nacimiento:",
+                        hintText: 'Fecha de nacimiento',
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.0223,
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.screenWidth * 0.09,
+                      ),
+                      child: customTextFormField(
+                        ubication,
+                        labelText: "Ubicación:",
+                        hintText: 'Ubicación',
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.2),
+                    CustomButton(
+                      color: const Color(0xFF246B84),
+                      padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.screenHeight * 0.0175,
+                        horizontal: SizeConfig.screenWidth * 0.28,
+                      ),
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(SizeConfig.screenWidth * 0.02)),
+                      alignment: Alignment.center,
+                      text: "Cambiar datos",
+                      textColor: Colors.white,
+                      press: () {
+                        context.watch<ProviderService>().providerUpdateIUser(
+                              phoneNumber.text,
+                            );
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(
-                height: SizeConfig.screenHeight * 0.0223,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 0.09,
-                ),
-                child: customTextFormField(
-                  phoneNumber,
-                  labelText: "Apellido:",
-                  hintText: userData!['apellido'],
-                  keyboardType: TextInputType.phone,
-                ),
-              ),
-              SizedBox(
-                height: SizeConfig.screenHeight * 0.0223,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 0.09,
-                ),
-                child: customTextFormField(
-                  birthDate,
-                  labelText: "Fecha de nacimiento:",
-                  hintText: 'Fecha de nacimiento',
-                ),
-              ),
-              SizedBox(
-                height: SizeConfig.screenHeight * 0.0223,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 0.09,
-                ),
-                child: customTextFormField(
-                  ubication,
-                  labelText: "Ubicación:",
-                  hintText: 'Ubicación',
-                ),
-              ),
-              SizedBox(height: SizeConfig.screenHeight * 0.2),
-              CustomButton(
-                color: const Color(0xFF246B84),
-                padding: EdgeInsets.symmetric(
-                  vertical: SizeConfig.screenHeight * 0.0175,
-                  horizontal: SizeConfig.screenWidth * 0.28,
-                ),
-                borderRadius: BorderRadius.all(
-                    Radius.circular(SizeConfig.screenWidth * 0.02)),
-                alignment: Alignment.center,
-                text: "Cambiar datos",
-                textColor: Colors.white,
-                press: () {
-                  updatePerson(
-                    contactInformation.text,
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 

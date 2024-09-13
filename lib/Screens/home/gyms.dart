@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/home/components/home_card.dart';
 import 'package:flutter_application_1/Screens/home/gym_information.dart';
-import 'package:flutter_application_1/Services/firebase_service.dart';
+import 'package:flutter_application_1/Services/provider.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
 import 'package:flutter_application_1/components/custom_text_field.dart';
 import 'package:flutter_application_1/components/filter_button.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
+import 'package:flutter_application_1/objetos/gym.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class Gyms extends StatefulWidget {
@@ -22,10 +24,9 @@ class _GymsState extends State<Gyms> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getGyms(),
+      future: context.watch<ProviderService>().providerGetGymData(),
       builder: (context, snapshot) {
-        var gyms = snapshot.data;
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (context.read<ProviderService>().gymData == null) {
           return griedViewShimmer();
         } else {
           return Container(
@@ -78,7 +79,51 @@ class _GymsState extends State<Gyms> {
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.screenWidth * 0.104,
                       ),
-                      child: gridView(gyms),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // Número de columnas
+                          crossAxisSpacing: SizeConfig.screenWidth *
+                              0.125, // Espacio horizontal
+                          mainAxisSpacing: SizeConfig.screenHeight *
+                              0.02, // Espacio vertical
+                          mainAxisExtent: SizeConfig.screenHeight * 0.2,
+                        ),
+                        itemCount:
+                            context.watch<ProviderService>().gymData?.length ??
+                                0,
+                        itemBuilder: (BuildContext context, int index) {
+                          Gym gym =
+                              context.watch<ProviderService>().gymData![index];
+                          return HomeCard(
+                            alignmentImage: Alignment.topCenter,
+                            heightFactor: 0.75,
+                            paddingText: EdgeInsets.only(
+                              top: SizeConfig.screenHeight * 0.17,
+                            ),
+                            name: context
+                                    .watch<ProviderService>()
+                                    .gymData?[index]
+                                    .name ??
+                                'Unnamed Gym',
+                            onTap: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                  return InformationGym(
+                                    gym: gym,
+                                  );
+                                }),
+                              );
+                            },
+                            image: NetworkImage(context
+                                .watch<ProviderService>()
+                                .gymData![index]
+                                .images[0]),
+                          );
+                        },
+                      ),
                     ),
                   )
                 ],
@@ -89,46 +134,6 @@ class _GymsState extends State<Gyms> {
       },
     );
   }
-}
-
-Widget gridView(gyms) {
-  return GridView.builder(
-    shrinkWrap: true,
-    physics: const NeverScrollableScrollPhysics(),
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 2, // Número de columnas
-      crossAxisSpacing: SizeConfig.screenWidth * 0.125, // Espacio horizontal
-      mainAxisSpacing: SizeConfig.screenHeight * 0.02, // Espacio vertical
-      mainAxisExtent: SizeConfig.screenHeight * 0.2,
-    ),
-    itemCount: gyms?.length ?? 0,
-    itemBuilder: (BuildContext context, int index) {
-      var gymData = gyms?[index];
-      String name = gymData['name'] ?? 'Unnamed Gym'; // Manejo de nulos
-      String imageUrl = gymData['images'][0];
-      return HomeCard(
-        alignmentImage: Alignment.topCenter,
-        heightFactor: 0.75,
-        paddingText: EdgeInsets.only(
-          top: SizeConfig.screenHeight * 0.17,
-        ),
-        name: name,
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) {
-              return InformationGym(
-                name: name,
-                imagesUrl: gymData['images'],
-                descripcion: gymData['description'],
-              );
-            }),
-          );
-        },
-        image: NetworkImage(imageUrl),
-      );
-    },
-  );
 }
 
 Widget griedViewShimmer() {

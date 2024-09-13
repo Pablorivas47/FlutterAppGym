@@ -5,18 +5,16 @@ import 'package:flutter_application_1/Screens/home/home.dart';
 import 'package:flutter_application_1/Screens/home/payment_methods.dart';
 import 'package:flutter_application_1/Screens/home/shifts.dart';
 import 'package:flutter_application_1/Screens/login.dart';
-import 'package:flutter_application_1/Screens/page_404.dart';
 import 'package:flutter_application_1/Screens/password_and_security.dart';
 import 'package:flutter_application_1/Screens/personal_information.dart';
 import 'package:flutter_application_1/Screens/sign_in_up.dart';
 import 'package:flutter_application_1/Screens/sign_up.dart';
 import 'package:flutter_application_1/Screens/routine.dart';
 import 'package:flutter_application_1/Screens/profile.dart';
-import 'package:flutter_application_1/api/google-maps.dart';
+import 'package:flutter_application_1/api/google_maps.dart';
 import 'package:flutter_application_1/components/custom_navigation_bar.dart';
 import 'package:flutter_application_1/components/custom_bottom_navigation_bar.dart';
 import 'package:flutter_application_1/components/custom_n_b.dart';
-export 'package:flutter_application_1/Screens/page_404.dart';
 export 'package:flutter_application_1/Screens/routine.dart';
 export 'package:flutter_application_1/Screens/profile.dart';
 export 'package:flutter_application_1/Screens/home/home.dart';
@@ -33,9 +31,6 @@ final Map<String, WidgetBuilder> routes = {
   },
   '/home': (context) {
     return const Home();
-  },
-  '/page404': (context) {
-    return const Page404();
   },
   '/routine': (context) {
     return const Routine();

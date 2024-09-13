@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Services/firebase_service.dart';
+import 'package:flutter_application_1/Services/provider.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
 import 'package:flutter_application_1/components/custom_button.dart';
+import 'package:provider/provider.dart';
 
 class PaymentMethods extends StatefulWidget {
   const PaymentMethods({super.key});
@@ -11,10 +12,7 @@ class PaymentMethods extends StatefulWidget {
 }
 
 class _PaymentMethodsState extends State<PaymentMethods> {
-  Future<void> handlePayment() async {
-    const double amount = 100.0;
-    await handlePayments(amount);
-  }
+  final double amount = 100.0;
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +35,9 @@ class _PaymentMethodsState extends State<PaymentMethods> {
           child: customCupButtonTimer(
               text: 'Pagar',
               onPressed: () async {
-                await handlePayment();
-                // ignore: use_build_context_synchronously
+                context
+                    .read<ProviderService>()
+                    .providerUpdateHandlePayments(amount);
                 Navigator.pushNamed(context, '/customNavBar');
               }),
         ),

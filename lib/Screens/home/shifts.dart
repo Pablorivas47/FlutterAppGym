@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/api/google_maps.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
 
 class Shifts extends StatefulWidget {
@@ -25,6 +26,7 @@ class _ShiftsState extends State<Shifts> {
           automaticallyImplyLeading: true,
           padding: EdgeInsets.zero,
         ),
+        body: GoogleMaps(),
       ),
     );
   }

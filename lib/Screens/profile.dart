@@ -44,7 +44,7 @@ class _ProfileState extends State<Profile> {
         future: context.watch<ProviderService>().providerGetUserData(),
         builder: (context, snapshot) {
           if (context.watch<ProviderService>().userData == null) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else {
             return Scaffold(
               backgroundColor: Colors.transparent,
