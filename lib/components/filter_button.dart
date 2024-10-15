@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 
 class FilterButton extends StatefulWidget {
-  const FilterButton({super.key});
+  final Function(String)? onFilterSelected; // Cambia el tipo a String
+  final Function(String)? onActivitySelected; // Agrega esta función
+  const FilterButton(
+      {super.key, this.onFilterSelected, this.onActivitySelected});
 
   @override
   State<FilterButton> createState() => _FilterButtonState();
 }
 
 class _FilterButtonState extends State<FilterButton> {
-  List<String> filters = ['Todos', 'Precio', 'Ubicacion', 'Puntuacion'];
+  List<String> filters = ['Todos', 'Crossfit', 'Musculacion', 'Personalizado'];
   String selectedFilter = 'Todos';
 
-  // Función para manejar el cambio de filtro
   void onFilterSelected(String filter) {
     setState(() {
       selectedFilter = filter;
+      widget.onFilterSelected?.call(filter); // Llama la función pasada
     });
   }
 
@@ -24,9 +27,9 @@ class _FilterButtonState extends State<FilterButton> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.104),
       child: SizedBox(
-        height: SizeConfig.screenHeight * 0.025, // Altura fija para el ListView
+        height: SizeConfig.screenHeight * 0.025,
         child: ListView.builder(
-          scrollDirection: Axis.horizontal, // ListView en horizontal
+          scrollDirection: Axis.horizontal,
           itemCount: filters.length,
           itemBuilder: (context, index) {
             String filter = filters[index];
@@ -34,6 +37,8 @@ class _FilterButtonState extends State<FilterButton> {
             return GestureDetector(
               onTap: () {
                 onFilterSelected(filter);
+                // Aquí puedes llamar a la función onActivitySelected si es necesario
+                // widget.onActivitySelected?.call(selectedActivity); // Asegúrate de que selectedActivity esté definido
               },
               child: Container(
                 padding: EdgeInsets.zero,
@@ -43,15 +48,12 @@ class _FilterButtonState extends State<FilterButton> {
                   color: isSelected
                       ? const Color.fromARGB(255, 252, 17, 0)
                       : Colors.white,
-                  border: Border.all(
-                    color: Colors.white,
-                  ),
+                  border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.screenWidth * 0.035,
-                  ),
+                      horizontal: SizeConfig.screenWidth * 0.035),
                   child: Center(
                     child: Text(
                       filter,

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Services/routes.dart';
+import 'package:flutter_application_1/Screens/user/home/home.dart';
+import 'package:flutter_application_1/Screens/user/profile.dart';
+import 'package:flutter_application_1/Screens/user/routine.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 
 

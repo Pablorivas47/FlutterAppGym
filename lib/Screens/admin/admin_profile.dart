@@ -3,25 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Services/auth.dart';
 import 'package:flutter_application_1/Services/provider.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
-import 'package:flutter_application_1/components/custom_text_field.dart';
 import 'package:flutter_application_1/components/custom_button.dart';
+import 'package:flutter_application_1/components/custom_text_field.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 import 'package:provider/provider.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class AdminProfile extends StatefulWidget {
+  const AdminProfile({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<AdminProfile> createState() => _AdminProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _AdminProfileState extends State<AdminProfile> {
   TextEditingController nameController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController nicknameController = TextEditingController();
-  TextEditingController gController = TextEditingController();
-  TextEditingController singoffController = TextEditingController();
-
+  TextEditingController locationController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -41,15 +38,19 @@ class _ProfileState extends State<Profile> {
         ),
       ),
       child: FutureBuilder(
-        future: context.watch<ProviderService>().providerGetUserData(),
+        future: context.read<ProviderService>().providerGetAdminAndGymData(),
         builder: (context, snapshot) {
-          if (context.watch<ProviderService>().userData == null) {
+          if (context.read<ProviderService>().adminGymData == null) {
             return const Center(child: CircularProgressIndicator());
           } else {
             return Scaffold(
               backgroundColor: Colors.transparent,
               appBar: CustomAppBar(
-                text: "Hola ${context.watch<ProviderService>().userData!.name}",
+                text: context
+                        .watch<ProviderService>()
+                        .adminGymData?['gym']
+                        .name ??
+                    '',
                 colorText: Colors.white,
                 automaticallyImplyLeading: false,
                 padding: EdgeInsets.symmetric(
@@ -64,37 +65,15 @@ class _ProfileState extends State<Profile> {
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.screenWidth * 0.09),
                       child: customTextFormField(
-                        nameController,
-                        enableText: false,
-                        labelText: "Nombre completo:",
-                        hintText:
-                            "${context.watch<ProviderService>().userData!.name} ${context.watch<ProviderService>().userData!.nickName} ",
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.screenWidth * 0.09),
-                      child: customTextFormField(
-                        usernameController,
-                        enableText: false,
-                        labelText: "E-Mail:",
-                        hintText:
-                            context.watch<ProviderService>().userData!.email,
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.screenWidth * 0.09),
-                      child: customTextFormField(
-                        nicknameController,
+                        phoneNumberController,
                         enableText: false,
                         labelText: "Numero de telefono:",
                         hintText: context
-                            .watch<ProviderService>()
-                            .userData!
-                            .numberPhone,
+                                .watch<ProviderService>()
+                                .adminGymData?['gym']
+                                .phoneNumber
+                                .toString() ??
+                            '',
                       ),
                     ),
                     SizedBox(height: SizeConfig.screenHeight * 0.0223),
@@ -102,7 +81,7 @@ class _ProfileState extends State<Profile> {
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.screenWidth * 0.09),
                       child: customTextFormField(
-                        nicknameController,
+                        locationController,
                         enableText: false,
                         labelText: "Ubicacion:",
                         hintText: "ubicacion  (hacerlo)",
@@ -119,7 +98,7 @@ class _ProfileState extends State<Profile> {
                         press: () {
                           Navigator.pushNamed(
                             context,
-                            '/personalInformation',
+                            '/adminPersonalInformation',
                           );
                         },
                       ),

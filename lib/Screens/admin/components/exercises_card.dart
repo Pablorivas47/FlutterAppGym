@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 
-class ActivityCard extends StatefulWidget {
+class ExercisesCard extends StatefulWidget {
   final Function()? onTap;
   final String name;
   final bool isSelected;
 
-  const ActivityCard({
+  const ExercisesCard({
     super.key,
     required this.onTap,
     required this.name,
@@ -15,10 +15,10 @@ class ActivityCard extends StatefulWidget {
   });
 
   @override
-  State<ActivityCard> createState() => _ActivityCardState();
+  State<ExercisesCard> createState() => _ExercisesCardState();
 }
 
-class _ActivityCardState extends State<ActivityCard> {
+class _ExercisesCardState extends State<ExercisesCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -51,23 +51,45 @@ class _ActivityCardState extends State<ActivityCard> {
                         ]
                       : [],
                 ),
-                child: Icon(
-                  CupertinoIcons.game_controller_solid,
-                  color: widget.isSelected ? Colors.white : Colors.black,
-                  size: SizeConfig.screenHeight * 0.05,
-                ),
+                child: widget.isSelected
+                    ? Image.asset(
+                        "assets/icons/w-white.png",
+                        fit: BoxFit.none,
+                        scale: SizeConfig.screenHeight * 0.06,
+                      )
+                    : Image.asset(
+                        "assets/icons/w-black.png",
+                        fit: BoxFit.none,
+                        scale: SizeConfig.screenHeight * 0.06,
+                      ),
               ),
               SizedBox(
                 height: SizeConfig.screenHeight * 0.0125,
               ),
-              Text(
-                widget.name,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: "Inter",
-                  fontSize: SizeConfig.screenHeight * 0.0125,
-                  fontWeight: FontWeight.w600,
-                ),
+              Row(
+                children: [
+                  Flexible(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        widget.name,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3, // Máximo 2 líneas para el nombre
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "Inter",
+                          fontSize: SizeConfig.screenHeight * 0.0135,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    CupertinoIcons.plus_app,
+                    color: Colors.white,
+                    size: SizeConfig.screenHeight * 0.02,
+                  ),
+                ],
               ),
             ],
           )),

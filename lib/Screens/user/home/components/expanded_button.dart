@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 
 class ExpandableWidget extends StatefulWidget {
-  const ExpandableWidget({Key? key}) : super(key: key);
+  const ExpandableWidget({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ExpandableWidgetState createState() => _ExpandableWidgetState();
 }
 

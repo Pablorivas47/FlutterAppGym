@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/api/google_maps.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
 
-class Shifts extends StatefulWidget {
-  const Shifts({super.key});
+class LocationMaps extends StatefulWidget {
+  const LocationMaps({super.key});
 
   @override
-  State<Shifts> createState() => _ShiftsState();
+  State<LocationMaps> createState() => _LocationMapsState();
 }
 
-class _ShiftsState extends State<Shifts> {
+class _LocationMapsState extends State<LocationMaps> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,7 +21,7 @@ class _ShiftsState extends State<Shifts> {
       child: const Scaffold(
         backgroundColor: Colors.transparent,
         appBar: CustomAppBar(
-          text: "Turnos",
+          text: "Ubicacion",
           colorText: Colors.white,
           automaticallyImplyLeading: true,
           padding: EdgeInsets.zero,

@@ -7,25 +7,24 @@ import 'package:flutter_application_1/constants/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-class PersonalInformation extends StatefulWidget {
-  const PersonalInformation({super.key});
+class AdminPersonalInformation extends StatefulWidget {
+  const AdminPersonalInformation({super.key});
 
   @override
-  State<PersonalInformation> createState() => _PersonalInformationState();
+  State<AdminPersonalInformation> createState() =>
+      _AdminPersonalInformationState();
 }
 
-class _PersonalInformationState extends State<PersonalInformation> {
-  TextEditingController contactInformation = TextEditingController();
+class _AdminPersonalInformationState extends State<AdminPersonalInformation> {
   TextEditingController phoneNumber = TextEditingController();
-  TextEditingController birthDate = TextEditingController();
   TextEditingController ubication = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: context.watch<ProviderService>().providerGetUserData(),
+      future: context.read<ProviderService>().providerGetAdminAndGymData(),
       builder: (context, snapshot) {
-        if (context.watch<ProviderService>().userData == null) {
+        if (context.read<ProviderService>().adminGymData == null) {
           return shimmerLoadingEffect();
         } else {
           return Container(
@@ -56,22 +55,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         phoneNumber,
                         labelText: "Numero de telefono:",
                         hintText: context
-                            .watch<ProviderService>()
-                            .userData!
-                            .numberPhone,
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.screenHeight * 0.0223,
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.screenWidth * 0.09,
-                      ),
-                      child: customTextFormField(
-                        birthDate,
-                        labelText: "Fecha de nacimiento:",
-                        hintText: 'Fecha de nacimiento',
+                                .watch<ProviderService>()
+                                .adminGymData?['gym']
+                                .phoneNumber
+                                .toString() ??
+                            '',
                       ),
                     ),
                     SizedBox(
@@ -100,7 +88,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       text: "Cambiar datos",
                       textColor: Colors.white,
                       press: () {
-                        context.watch<ProviderService>().providerUpdateIUser(
+                        context.read<ProviderService>().providerUpdateIUser(
                               phoneNumber.text,
                             );
                         Navigator.pop(context);

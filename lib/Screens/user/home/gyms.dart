@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/home/components/home_card.dart';
-import 'package:flutter_application_1/Screens/home/gym_information.dart';
+import 'package:flutter_application_1/Screens/user/home/components/home_card.dart';
+import 'package:flutter_application_1/Screens/user/home/gym_information.dart';
 import 'package:flutter_application_1/Services/provider.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
 import 'package:flutter_application_1/components/custom_text_field.dart';
@@ -20,13 +20,52 @@ class Gyms extends StatefulWidget {
 
 class _GymsState extends State<Gyms> {
   TextEditingController filterController = TextEditingController();
+  String? selectedActivity; // Variable para la actividad seleccionada
+  String selectedFilter = 'Todos'; // Variable para el filtro seleccionado
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Escuchar cambios en el TextEditingController
+    filterController.addListener(() {
+      // Filtrar gimnasios cada vez que cambie el texto
+      context.read<ProviderService>().providerGetFilteredGyms(
+            filterController.text,
+            selectedActivity,
+          );
+    });
+  }
+
+  void onActivitySelected(String activity) {
+    setState(() {
+      selectedActivity = activity;
+      // Llama al método para filtrar gimnasios por actividad
+      context.read<ProviderService>().providerGetFilteredGyms(
+            filterController.text,
+            selectedActivity,
+          );
+    });
+  }
+
+  void onFilterSelected(String filter) {
+    setState(() {
+      selectedFilter = filter;
+      // Llama al método para filtrar gimnasios según el filtro seleccionado
+      context.read<ProviderService>().providerGetFilteredGyms(
+            filterController.text,
+            selectedFilter == 'Todos' ? null : selectedActivity,
+          );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: context.watch<ProviderService>().providerGetGymData(),
+      future: context.read<ProviderService>().providerGetGymsAndActivities(),
       builder: (context, snapshot) {
-        if (context.read<ProviderService>().gymData == null) {
+        // Verifica si los gimnasios están disponibles
+        if (context.read<ProviderService>().gymsAndActivities == null) {
           return griedViewShimmer();
         } else {
           return Container(
@@ -69,7 +108,10 @@ class _GymsState extends State<Gyms> {
                           ),
                         ),
                         SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                        const FilterButton(),
+                        FilterButton(
+                          onFilterSelected: onFilterSelected,
+                          onActivitySelected: onActivitySelected,
+                        ),
                         SizedBox(height: SizeConfig.screenHeight * 0.0223),
                       ],
                     ),
@@ -90,23 +132,21 @@ class _GymsState extends State<Gyms> {
                               0.02, // Espacio vertical
                           mainAxisExtent: SizeConfig.screenHeight * 0.2,
                         ),
-                        itemCount:
-                            context.watch<ProviderService>().gymData?.length ??
-                                0,
+                        itemCount: context
+                            .watch<ProviderService>()
+                            .filteredGym
+                            .length, // Usa la lista filtrada
                         itemBuilder: (BuildContext context, int index) {
-                          Gym gym =
-                              context.watch<ProviderService>().gymData![index];
+                          Gym gym = context
+                              .watch<ProviderService>()
+                              .filteredGym[index]; // Accede a la lista filtrada
                           return HomeCard(
                             alignmentImage: Alignment.topCenter,
                             heightFactor: 0.75,
                             paddingText: EdgeInsets.only(
                               top: SizeConfig.screenHeight * 0.17,
                             ),
-                            name: context
-                                    .watch<ProviderService>()
-                                    .gymData?[index]
-                                    .name ??
-                                'Unnamed Gym',
+                            name: gym.name,
                             onTap: () async {
                               Navigator.push(
                                 context,
@@ -117,10 +157,7 @@ class _GymsState extends State<Gyms> {
                                 }),
                               );
                             },
-                            image: NetworkImage(context
-                                .watch<ProviderService>()
-                                .gymData![index]
-                                .images[0]),
+                            image: NetworkImage(gym.logo),
                           );
                         },
                       ),

@@ -1,17 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_1/objetos/activity.dart';
 
 class Gym {
   String name;
-  String uid;
   String description;
   List<String> images;
+  String logo;
+  num phoneNumber;
+  List<Activity> activities;
 
-  Gym({
-    required this.name,
-    required this.uid,
-    required this.description,
-    required this.images,
-  });
+  Gym(
+      {required this.name,
+      required this.description,
+      required this.images,
+      required this.logo,
+      required this.phoneNumber,
+      required this.activities});
 
   static Future<Gym> fromFirestoreGym(DocumentSnapshot doc) async {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -19,9 +23,15 @@ class Gym {
 
     return Gym(
       name: data['name'],
-      uid: data['uid'],
       description: data['description'],
+      logo: data['logo'],
       images: images,
+      phoneNumber: data['phoneNumber'],
+      activities: [],
     );
+  }
+
+  void addActivities(List<Activity> activities) {
+    this.activities.addAll(activities);
   }
 }

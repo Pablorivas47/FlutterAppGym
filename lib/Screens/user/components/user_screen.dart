@@ -5,15 +5,15 @@ import 'package:flutter_application_1/Screens/user/profile.dart';
 import 'package:flutter_application_1/Screens/user/routine.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 
-class CustomNavigationBar extends StatefulWidget {
-  const CustomNavigationBar({super.key});
+class UserScreen extends StatefulWidget {
+  const UserScreen({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _CustomNavigationBarState createState() => _CustomNavigationBarState();
+  _UserScreenState createState() => _UserScreenState();
 }
 
-class _CustomNavigationBarState extends State<CustomNavigationBar> {
+class _UserScreenState extends State<UserScreen> {
   int selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[

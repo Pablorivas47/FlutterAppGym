@@ -3,13 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class IUser {
   String email;
   String name;
-  String numberPhone;
+  num numberPhone;
   String nickName;
   String gender;
   Timestamp? expirationDate;
   Timestamp? paymentDate;
   num? amount;
   GeoPoint? location;
+  String role;
+  String? club;
 
   IUser({
     required this.email,
@@ -21,6 +23,8 @@ class IUser {
     this.paymentDate,
     this.amount,
     this.location,
+    required this.role,
+    this.club,
   });
 
   static Future<IUser> fromFirestore(DocumentSnapshot doc) async {
@@ -36,6 +40,8 @@ class IUser {
       paymentDate: data['paymentDate'],
       amount: data['amount'],
       location: data['location'],
+      role: data['role'],
+      club: data['club'],
     );
   }
 }

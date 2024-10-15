@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/home/components/home_card.dart';
+import 'package:flutter_application_1/Screens/user/home/components/home_card.dart';
 import 'package:flutter_application_1/Services/provider.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
 import 'package:flutter_application_1/components/stop_watch_timer.dart';
@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
     return FutureBuilder(
         future: context.read<ProviderService>().providerGetUserData(),
         builder: (context, snapshot) {
-          if (context.watch<ProviderService>().userData == null) {
+          if (context.read<ProviderService>().userData == null) {
             return shimmerLoadingEffect();
           } else {
             final day = context
@@ -93,16 +93,17 @@ class _HomeState extends State<Home> {
                                   color: Colors.white,
                                 )),
                             child: Center(
-                              child: Text(
-                                "Vencimiento: ${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-$year",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "Inter",
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: SizeConfig.screenWidth * 0.03,
-                                ),
+                                child: Text(
+                              (day != null && month != null && year != null)
+                                  ? "Vencimiento: ${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-$year"
+                                  : "Vencimiento: ",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: "Inter",
+                                fontWeight: FontWeight.w300,
+                                fontSize: SizeConfig.screenWidth * 0.03,
                               ),
-                            ),
+                            )),
                           ),
                         ),
                       ),

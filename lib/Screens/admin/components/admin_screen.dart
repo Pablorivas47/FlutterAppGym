@@ -1,25 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/user/home/home.dart';
-import 'package:flutter_application_1/Screens/user/profile.dart';
-import 'package:flutter_application_1/Screens/user/routine.dart';
+import 'package:flutter_application_1/Screens/admin/admin_home.dart';
+import 'package:flutter_application_1/Screens/admin/admin_profile.dart';
+import 'package:flutter_application_1/Screens/admin/admin_routine.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 
-class CustomNavigationBar extends StatefulWidget {
-  const CustomNavigationBar({super.key});
+class AdminScreen extends StatefulWidget {
+  const AdminScreen({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _CustomNavigationBarState createState() => _CustomNavigationBarState();
+  _AdminScreenState createState() => _AdminScreenState();
 }
 
-class _CustomNavigationBarState extends State<CustomNavigationBar> {
+class _AdminScreenState extends State<AdminScreen> {
   int selectedIndex = 0;
+  int? indexFilter = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Home(),
-    Routine(),
-    Profile(),
+    AdminHome(),
+    AdminRoutine(),
+    AdminProfile(),
   ];
 
   void _onItemTapped(int index) {

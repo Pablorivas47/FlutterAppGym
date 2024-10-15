@@ -1,9 +1,8 @@
 import 'package:flutter_application_1/constants/errores/validation_error_messages.dart';
 
-
 //Errores ForgetPassword
-Map<String ,String?> forgetPasswordMap(
-  Map<String ,String?> errors,
+Map<String, String?> forgetPasswordMap(
+  Map<String, String?> errors,
   String email,
 ) {
   if (email.isEmpty) {
@@ -11,16 +10,16 @@ Map<String ,String?> forgetPasswordMap(
   } else {
     if (!emailValidatorRegExp.hasMatch(email)) {
       errors['email'] = kInvalidEmailError;
-    } else{
-        errors.remove('email');
-      }
+    } else {
+      errors.remove('email');
+    }
   }
   return errors;
 }
 
 //Errores SingIn
-Map<String ,String?> signInErrorValidationMap(
-  Map<String ,String?> errors,
+Map<String, String?> signInErrorValidationMap(
+  Map<String, String?> errors,
   String email,
   String password,
   bool logged,
@@ -45,23 +44,23 @@ Map<String ,String?> signInErrorValidationMap(
       errors.remove('password');
     }
   }
-   if (logged == false) {
-       if (errors['email'] != (kEmailNullError) &&
-          (errors['email'] != (kInvalidEmailError))) {
-         if (errors['password'] != (kPassNullError) && 
+  if (logged == false) {
+    if (errors['email'] != (kEmailNullError) &&
+        (errors['email'] != (kInvalidEmailError))) {
+      if (errors['password'] != (kPassNullError) &&
           (errors['password'] != (kShortPassError))) {
-            errors['password'] = (kWrongEmailPassword);
-          }
-  } else {
-    errors.remove(kWrongEmailPassword);
+        errors['password'] = (kWrongEmailPassword);
+      }
+    } else {
+      errors.remove(kWrongEmailPassword);
     }
   }
   return errors;
 }
 
 //Errores SingUp
-Map<String ,String?> signUpErrorValidationMap(
-  Map<String ,String?> errors,
+Map<String, String?> signUpErrorValidationMap(
+  Map<String, String?> errors,
   String name,
   String nickname,
   String email,
@@ -69,14 +68,15 @@ Map<String ,String?> signUpErrorValidationMap(
   String phonenumber,
   String password,
   String confirmpassword,
+  bool created,
 ) {
-  if (name.isEmpty){
+  if (name.isEmpty) {
     errors['name'] = kNameNullError;
   } else {
-   errors.remove('name');
+    errors.remove('name');
   }
 
-  if (nickname.isEmpty){
+  if (nickname.isEmpty) {
     errors['nickname'] = kApellidoNullError;
   } else {
     errors.remove('nickname');
@@ -85,12 +85,12 @@ Map<String ,String?> signUpErrorValidationMap(
   if (phonenumber.isEmpty) {
     errors['phonenumber'] = kPhoneNumberNullError;
   } else if (!kPhoneRegExpPattern.hasMatch(phonenumber)) {
-      errors['phonenumber'] = kInvalidPhoneNumberError;
+    errors['phonenumber'] = kInvalidPhoneNumberError;
   } else {
     errors.remove('phonenumber');
-}
+  }
 
-  if (gender.isEmpty){
+  if (gender.isEmpty) {
     errors['gender'] = kGenderNullError;
   } else {
     errors.remove('gender');
@@ -101,9 +101,9 @@ Map<String ,String?> signUpErrorValidationMap(
   } else {
     if (!emailValidatorRegExp.hasMatch(email)) {
       errors['email'] = kInvalidEmailError;
-    }else{
+    } else {
       errors.remove('email');
-    }  
+    }
   }
   if (password.isEmpty) {
     errors['password'] = kPassNullError;
@@ -115,23 +115,30 @@ Map<String ,String?> signUpErrorValidationMap(
       errors.remove('password');
     }
   }
-  if (password != confirmpassword) {  
-    errors['confirmpassword'] = kNoMatchPasswords; 
+  if (password != confirmpassword) {
+    errors['confirmpassword'] = kNoMatchPasswords;
   } else {
     errors.remove('confirmpassword');
   }
 
+  if (errors.isEmpty) {
+    if (created == false) {
+      errors['confirmpassword'] = kCreatingAccountError;
+    } else {
+      errors.remove('confirmpassword');
+    }
+  }
 
   return errors;
 }
 
-Map<String ,String?> errorEmailMap(
-  Map<String ,String?> errors,
+Map<String, String?> errorEmailMap(
+  Map<String, String?> errors,
   bool existEmail,
 ) {
-  if(existEmail == false){
+  if (existEmail == false) {
     errors['email'] = kAlreadyExistingAccount;
-  }else{
+  } else {
     errors.remove('email');
   }
 
@@ -150,26 +157,25 @@ List<String?> signUpErrorValidationList(
   String confirmpassword,
   bool logged,
 ) {
-
-  if (name == ''){
+  if (name == '') {
     errors.add(kNameNullError);
   } else {
     errors.remove(kNameNullError);
   }
 
-  if (nickname == ''){
+  if (nickname == '') {
     errors.add(kApellidoNullError);
   } else {
     errors.remove(kApellidoNullError);
   }
 
-  if (phonenumber == ''){
+  if (phonenumber == '') {
     errors.add(kPhoneNumberNullError);
   } else {
     errors.remove(kPhoneNumberNullError);
   }
 
-  if (gender == ''){
+  if (gender == '') {
     errors.add(kGenderNullError);
   } else {
     errors.remove(kGenderNullError);
@@ -220,9 +226,9 @@ List<String?> signUpErrorValidationList(
   }
 
   if (password != confirmpassword) {
-    if (!errors.contains(kNoMatchPasswords)) {       
-          errors.add(kNoMatchPasswords);
-        }
+    if (!errors.contains(kNoMatchPasswords)) {
+      errors.add(kNoMatchPasswords);
+    }
   } else {
     errors.remove(kNoMatchPasswords);
   }
