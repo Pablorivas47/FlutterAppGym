@@ -177,16 +177,14 @@ class _PasswordAndSecurityState extends State<PasswordAndSecurity> {
             SizedBox(
               height: SizeConfig.screenHeight * 0.0223,
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: SizeConfig.screenWidth * 0.09,
-              ),
+            Align(
+              alignment: Alignment.center,
               child: CustomButton(
-                  //Button Change information
+                  width: SizeConfig.screenWidth * 0.6,
+                  height: SizeConfig.screenHeight * 0.06,
                   color: const Color(0xFF246B84),
                   padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.screenHeight * 0.0175,
-                    horizontal: SizeConfig.screenWidth * 0.28,
+                    horizontal: SizeConfig.screenWidth * 0.02,
                   ),
                   borderRadius: BorderRadius.all(
                       Radius.circular(SizeConfig.screenWidth * 0.02)),

@@ -19,63 +19,22 @@ class Gyms extends StatefulWidget {
 }
 
 class _GymsState extends State<Gyms> {
-  TextEditingController filterController = TextEditingController();
-  String? selectedActivity; // Variable para la actividad seleccionada
-  String selectedFilter = 'Todos'; // Variable para el filtro seleccionado
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Escuchar cambios en el TextEditingController
-    filterController.addListener(() {
-      // Filtrar gimnasios cada vez que cambie el texto
-      context.read<ProviderService>().providerGetFilteredGyms(
-            filterController.text,
-            selectedActivity,
-          );
-    });
-  }
-
-  void onActivitySelected(String activity) {
-    setState(() {
-      selectedActivity = activity;
-      // Llama al método para filtrar gimnasios por actividad
-      context.read<ProviderService>().providerGetFilteredGyms(
-            filterController.text,
-            selectedActivity,
-          );
-    });
-  }
-
-  void onFilterSelected(String filter) {
-    setState(() {
-      selectedFilter = filter;
-      // Llama al método para filtrar gimnasios según el filtro seleccionado
-      context.read<ProviderService>().providerGetFilteredGyms(
-            filterController.text,
-            selectedFilter == 'Todos' ? null : selectedActivity,
-          );
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: context.read<ProviderService>().providerGetGymsAndActivities(),
-      builder: (context, snapshot) {
-        // Verifica si los gimnasios están disponibles
-        if (context.read<ProviderService>().gymsAndActivities == null) {
-          return griedViewShimmer();
-        } else {
-          return Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage("assets/image/Fondo_Sing_In.jpg"),
-              ),
-            ),
-            child: Scaffold(
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage("assets/image/Fondo_Sing_In.jpg"),
+        ),
+      ),
+      child: FutureBuilder(
+        future: context.read<ProviderService>().providerGetFilteredGyms(),
+        builder: (context, snapshot) {
+          if (context.read<ProviderService>().gymsAndActivities == null) {
+            return const CircularProgressIndicator();
+          } else {
+            return Scaffold(
               backgroundColor: Colors.transparent,
               appBar: const CustomAppBar(
                 text: 'Gimnasios',
@@ -94,7 +53,9 @@ class _GymsState extends State<Gyms> {
                             horizontal: SizeConfig.screenWidth * 0.104,
                           ),
                           child: personalizeTextFormField(
-                            filterController,
+                            context
+                                .watch<ProviderService>()
+                                .filterGymController,
                             filled: true,
                             fillColor: Colors.white,
                             colorHintText: Colors.black,
@@ -109,8 +70,23 @@ class _GymsState extends State<Gyms> {
                         ),
                         SizedBox(height: SizeConfig.screenHeight * 0.0223),
                         FilterButton(
-                          onFilterSelected: onFilterSelected,
-                          onActivitySelected: onActivitySelected,
+                          onFilterSelected: (String selected) {
+                            setState(() {
+                              // Actualizamos el valor seleccionado en el Provider
+                              context
+                                  .read<ProviderService>()
+                                  .setSelectedGym(selected);
+                              context
+                                  .read<ProviderService>()
+                                  .filterGymController
+                                  .clear();
+                              context
+                                  .read<ProviderService>()
+                                  .providerGetFilteredExercises();
+                            });
+                          },
+                          activities:
+                              context.read<ProviderService>().activities,
                         ),
                         SizedBox(height: SizeConfig.screenHeight * 0.0223),
                       ],
@@ -121,43 +97,57 @@ class _GymsState extends State<Gyms> {
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.screenWidth * 0.104,
                       ),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // Número de columnas
-                          crossAxisSpacing: SizeConfig.screenWidth *
-                              0.125, // Espacio horizontal
-                          mainAxisSpacing: SizeConfig.screenHeight *
-                              0.02, // Espacio vertical
-                          mainAxisExtent: SizeConfig.screenHeight * 0.2,
-                        ),
-                        itemCount: context
-                            .watch<ProviderService>()
-                            .filteredGym
-                            .length, // Usa la lista filtrada
-                        itemBuilder: (BuildContext context, int index) {
-                          Gym gym = context
-                              .watch<ProviderService>()
-                              .filteredGym[index]; // Accede a la lista filtrada
-                          return HomeCard(
-                            alignmentImage: Alignment.topCenter,
-                            heightFactor: 0.75,
-                            paddingText: EdgeInsets.only(
-                              top: SizeConfig.screenHeight * 0.17,
+                      child: Consumer<ProviderService>(
+                        builder: (context, provider, child) {
+                          // Verificar si hay gimnasios filtrados
+                          if (provider.filteredGym.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                "No se encontraron gimnasios",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          }
+                          return GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2, // Número de columnas
+                              crossAxisSpacing: SizeConfig.screenWidth *
+                                  0.125, // Espacio horizontal
+                              mainAxisSpacing: SizeConfig.screenHeight *
+                                  0.02, // Espacio vertical
+                              mainAxisExtent: SizeConfig.screenHeight * 0.2,
                             ),
-                            name: gym.name,
-                            onTap: () async {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) {
-                                  return InformationGym(
-                                    gym: gym,
+                            itemCount: context
+                                .read<ProviderService>()
+                                .filteredGym
+                                .length,
+                            itemBuilder: (BuildContext context, int index) {
+                              Gym gym = context
+                                  .read<ProviderService>()
+                                  .filteredGym[index];
+                              return HomeCard(
+                                alignmentImage: Alignment.topCenter,
+                                heightFactor: 0.75,
+                                paddingText: EdgeInsets.only(
+                                  top: SizeConfig.screenHeight * 0.17,
+                                ),
+                                name: gym.name,
+                                onTap: () async {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return InformationGym(
+                                        gym: gym,
+                                      );
+                                    }),
                                   );
-                                }),
+                                },
+                                image: NetworkImage(gym.logo),
                               );
                             },
-                            image: NetworkImage(gym.logo),
                           );
                         },
                       ),
@@ -165,10 +155,10 @@ class _GymsState extends State<Gyms> {
                   )
                 ],
               ),
-            ),
-          );
-        }
-      },
+            );
+          }
+        },
+      ),
     );
   }
 }

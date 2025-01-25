@@ -92,36 +92,50 @@ class CustomButton extends StatelessWidget {
   String? routeNamePlacement;
   final VoidCallback press;
   final EdgeInsets? paddingButton;
+  final double? width;
+  final double? height;
 
   CustomButton({
     super.key,
     required this.color,
     required this.text,
     required this.borderRadius,
-    required this.padding,
+    this.padding,
     required this.alignment,
     this.textColor,
     this.routeNamePlacement,
     required this.press,
     this.paddingButton,
+    this.width,
+    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoButton(
-      pressedOpacity: 0.5,
-      color: color,
-      padding: padding,
-      borderRadius: borderRadius,
-      alignment: alignment,
-      onPressed: press,
-      child: Text(
-        text,
-        style: TextStyle(
-          color: textColor,
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w400,
-          fontSize: SizeConfig.screenWidth * 0.04,
+    return SizedBox(
+      width: width ?? SizeConfig.screenWidth * 0.25,
+      height: height ??
+          SizeConfig.screenHeight *
+              0.05, // Puedes cambiar el valor por el tamaño deseado.
+      child: CupertinoButton(
+        pressedOpacity: 0.5,
+        color: color,
+        padding: padding ??
+            EdgeInsets.symmetric(
+              horizontal: SizeConfig.screenWidth * 0.02,
+              vertical: SizeConfig.screenHeight * 0.0,
+            ),
+        borderRadius: borderRadius,
+        alignment: alignment,
+        onPressed: press,
+        child: Text(
+          text,
+          style: TextStyle(
+            color: textColor,
+            fontFamily: "Inter",
+            fontWeight: FontWeight.w400,
+            fontSize: SizeConfig.screenWidth * 0.04,
+          ),
         ),
       ),
     );

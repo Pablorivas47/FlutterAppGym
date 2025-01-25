@@ -2,8 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/user/home/components/activity_card.dart';
 import 'package:flutter_application_1/Screens/user/home/components/animated_containter_expanded.dart';
+import 'package:flutter_application_1/Screens/user/home/location.dart';
+import 'package:flutter_application_1/api/permission_handle.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 import 'package:flutter_application_1/objetos/gym.dart';
+import 'dart:async';
+import 'package:geolocator/geolocator.dart';
 
 class InformationGym extends StatefulWidget {
   final Gym? gym;
@@ -16,6 +20,37 @@ class InformationGym extends StatefulWidget {
 class _InformationGymState extends State<InformationGym> {
   int _expandedIndex = -1;
   final PageController _pageController = PageController();
+
+  // Future<Position> determePosition() async {
+  //   LocationPermission permission;
+
+  //   // Verifica si el permiso ya fue otorgado
+  //   permission = await Geolocator.checkPermission();
+
+  //   // Si el permiso está denegado, lo solicita
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       // Si el usuario sigue denegando el permiso
+  //       throw Exception('Permiso de ubicación denegado');
+  //     }
+  //   }
+
+  //   // Si el permiso está denegado permanentemente, muestra un mensaje o redirige
+  //   if (permission == LocationPermission.deniedForever) {
+  //     throw Exception(
+  //         'Permiso de ubicación denegado permanentemente. Actívelo desde la configuración del dispositivo.');
+  //   }
+
+  //   // Si todo está bien, devuelve la posición actual
+  //   return await Geolocator.getCurrentPosition();
+  // }
+
+  // void getCurrentLocation() async {
+  //   Position position = await determePosition();
+  //   print("Latitud: ${position.latitude}");
+  //   print("Longitud: ${position.longitude}");
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -157,8 +192,25 @@ class _InformationGymState extends State<InformationGym> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/location');
+                            onTap: () async {
+                              final position = await PermissionHandler
+                                  .requestPermissionAndGetLocation(context);
+                              if (position != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LocationMaps(
+                                      latitude: position.latitude,
+                                      longitude: position.longitude,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Permiso no otorgado")),
+                                );
+                              }
                             },
                             child: Container(
                               height: SizeConfig.screenHeight * 0.05,

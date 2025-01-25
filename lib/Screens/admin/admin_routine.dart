@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/admin/components/exercises_card.dart';
-import 'package:flutter_application_1/Screens/admin/components/filter_exercises.dart';
+import 'package:flutter_application_1/Screens/admin/components/searchable_dropdown.dart';
+import 'package:flutter_application_1/Screens/admin/routine/add_routine.dart';
 import 'package:flutter_application_1/Services/provider.dart';
 import 'package:flutter_application_1/components/custom_app_bar.dart';
+import 'package:flutter_application_1/components/custom_button.dart';
 import 'package:flutter_application_1/components/custom_text_field.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 import 'package:provider/provider.dart';
@@ -16,22 +16,10 @@ class AdminRoutine extends StatefulWidget {
 }
 
 class _AdminRoutineState extends State<AdminRoutine> {
-  TextEditingController filterController = TextEditingController();
+  TextEditingController routineController = TextEditingController();
   int expandedIndex = -1;
-  int selectedExercise = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Escuchar cambios en el filtro
-    filterController.addListener(() {
-      // Llama al método del provider para filtrar ejercicios
-      context.read<ProviderService>().providerGetFilteredExercises(
-          filterController.text,
-          selectedExercise); // Asegúrate de pasar el selectedExercise
-    });
-  }
+  String nameMuscleGroup = 'Espalda';
+  String routineDelete = '';
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +31,7 @@ class _AdminRoutineState extends State<AdminRoutine> {
         ),
       ),
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.transparent,
         appBar: CustomAppBar(
           text: 'Rutina',
@@ -52,91 +41,175 @@ class _AdminRoutineState extends State<AdminRoutine> {
             horizontal: SizeConfig.screenWidth * 0.05,
           ),
         ),
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.screenWidth * 0.104,
-                    ),
-                    child: personalizeTextFormField(
-                      filterController,
-                      filled: true,
-                      fillColor: Colors.white,
-                      colorHintText: Colors.black,
-                      colorIcon: Colors.black,
-                      hintText: "Buscar",
-                      icon: Icon(
-                        CupertinoIcons.search,
-                        color: Colors.black,
-                        size: SizeConfig.screenHeight * 0.03,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                  FilterExercises(
-                    onFilterSelected: (int selected) {
-                      setState(() {
-                        selectedExercise = selected;
-                        filterController.clear();
-                        // Llama al método de filtrado después de seleccionar un nuevo grupo
-                        context
-                            .read<ProviderService>()
-                            .providerGetFilteredExercises(filterController.text,
-                                selected); // Pasa el nuevo grupo
-                      });
-                    },
-                    exercisesData:
-                        context.read<ProviderService>().exercisesData,
-                  ),
-                  SizedBox(height: SizeConfig.screenHeight * 0.0223),
-                ],
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.screenWidth * 0.104,
-                    ),
-                    child: SizedBox(
-                      height: SizeConfig.screenHeight * 0.2,
-                      child: GridView.builder(
-                        scrollDirection: Axis.horizontal,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 1,
-                          childAspectRatio: 2,
-                          mainAxisSpacing: SizeConfig.screenWidth * 0.075,
+        body: SingleChildScrollView(
+          child: FutureBuilder(
+            future: context
+                .read<ProviderService>()
+                .providerGetAdminAndGymData(), // Carga inicial de los ejercicios
+            builder: (context, snapshot) {
+              if (context.read<ProviderService>().adminGymData == null) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                return Column(
+                  children: [
+                    Stack(children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 0.104,
                         ),
-                        itemCount: context
-                            .watch<ProviderService>()
-                            .filteredExercises
-                            .length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ExercisesCard(
-                            name: context
-                                .watch<ProviderService>()
-                                .filteredExercises[index],
-                            onTap: () {
-                              setState(() {
-                                expandedIndex =
-                                    (expandedIndex == index) ? -1 : index;
-                              });
-                            },
-                            isSelected: expandedIndex == index,
-                          );
-                        },
+                        child: Container(
+                          height: SizeConfig.screenHeight * 0.20,
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(0, 52, 72, 100),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.white,
+                              )),
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 0.2,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                            lineTextFormField(
+                              routineController,
+                              hintText: 'Nombre de la rutina:',
+                              colorHintText: Colors.white,
+                              colorText: Colors.white,
+                            ),
+                            SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                            Center(
+                              child: CustomButton(
+                                width: SizeConfig.screenWidth * 0.35,
+                                color: const Color(0xFF246B84),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.screenWidth * 0.02,
+                                ),
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    SizeConfig.screenWidth * 0.02)),
+                                alignment: Alignment.center,
+                                text: "Crear Rutina",
+                                textColor: Colors.white,
+                                press: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddRoutine(
+                                          nameRoutine: routineController.text),
+                                    ),
+                                  ).then((_) {
+                                    routineController.clear();
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]),
+                    SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                    Stack(children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 0.104,
+                        ),
+                        child: Container(
+                          height: SizeConfig.screenHeight * 0.20,
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(0, 52, 72, 100),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.white,
+                              )),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 0.2,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                            SearchableDropdown(
+                              items: context
+                                  .watch<ProviderService>()
+                                  .adminGymData!['gym']
+                                  .routines,
+                              hintText: 'Seleccionar rutina',
+                              onItemSelected: (selectedItem) {
+                                routineDelete = selectedItem;
+                              },
+                            ),
+                            SizedBox(height: SizeConfig.screenHeight * 0.0223),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CustomButton(
+                                  color: const Color(0xFF246B84),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          SizeConfig.screenWidth * 0.04),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(7)),
+                                  alignment: Alignment.center,
+                                  text: "Modificar",
+                                  textColor: Colors.white,
+                                  press: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AddRoutine(
+                                            nameRoutine:
+                                                routineController.text),
+                                      ),
+                                    );
+                                    setState(() {
+                                      routineController.clear();
+                                    });
+                                  },
+                                ),
+                                SizedBox(
+                                    width: SizeConfig.screenWidth * 0.0223),
+                                CustomButton(
+                                  color: Colors.red,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          SizeConfig.screenWidth * 0.04),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(7)),
+                                  alignment: Alignment.center,
+                                  text: "Eliminar",
+                                  textColor: Colors.white,
+                                  press: () {
+                                    context
+                                        .read<ProviderService>()
+                                        .providerDeleteRoutine(routineDelete);
+                                    setState(() {
+                                      context
+                                          .read<ProviderService>()
+                                          .searchController
+                                          .clear();
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]),
+                    SizedBox(width: SizeConfig.screenWidth * 0.0223),
+                    SizedBox(height: SizeConfig.screenHeight * 0.3),
+                  ],
+                );
+              }
+            },
+          ),
         ),
       ),
     );

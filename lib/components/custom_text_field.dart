@@ -2,6 +2,48 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/size_config.dart';
 
+TextFormField lineTextFormField(TextEditingController controller,
+    {bool? enableText,
+    String hintText = "nombre de rutina:", // Texto predeterminado del label
+    Icon? icon,
+    TextInputType? keyboardType,
+    Color? colorHintText,
+    Color? colorIcon,
+    Color? labelColor = Colors.white,
+    Color? colorText = Colors.white}) {
+  return TextFormField(
+    controller: controller,
+    enabled: enableText,
+    cursorColor: Colors.white,
+    cursorWidth: SizeConfig.screenWidth * 0.003,
+    style: TextStyle(
+      color: colorText,
+      fontFamily: "Inter",
+      fontSize: SizeConfig.screenHeight * 0.02,
+      fontWeight: FontWeight.w400,
+    ),
+    decoration: InputDecoration(
+      filled: true,
+      fillColor: Colors.transparent, // Fondo transparente
+      prefixIcon: icon,
+      hintText: hintText,
+      hintStyle: TextStyle(
+        color: colorHintText,
+        fontFamily: "Inter",
+        fontSize: SizeConfig.screenHeight * 0.02,
+        fontWeight: FontWeight.w300,
+      ),
+      contentPadding: EdgeInsets.zero,
+      enabledBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.white),
+      ),
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.red),
+      ),
+    ),
+  );
+}
+
 TextFormField eMailTextFormField(
   TextEditingController controller, {
   required String hintText,

@@ -4,15 +4,20 @@ import 'package:flutter_application_1/constants/size_config.dart';
 class FilterButton extends StatefulWidget {
   final Function(String)? onFilterSelected; // Cambia el tipo a String
   final Function(String)? onActivitySelected; // Agrega esta función
+  final List<String> activities;
+
   const FilterButton(
-      {super.key, this.onFilterSelected, this.onActivitySelected});
+      {super.key,
+      this.onFilterSelected,
+      this.onActivitySelected,
+      required this.activities});
 
   @override
   State<FilterButton> createState() => _FilterButtonState();
 }
 
 class _FilterButtonState extends State<FilterButton> {
-  List<String> filters = ['Todos', 'Crossfit', 'Musculacion', 'Personalizado'];
+  //List<String> filters = ['Todos', 'Crossfit', 'Musculacion', 'Personalizado'];
   String selectedFilter = 'Todos';
 
   void onFilterSelected(String filter) {
@@ -30,15 +35,13 @@ class _FilterButtonState extends State<FilterButton> {
         height: SizeConfig.screenHeight * 0.025,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: filters.length,
+          itemCount: widget.activities.length,
           itemBuilder: (context, index) {
-            String filter = filters[index];
+            String filter = widget.activities[index];
             bool isSelected = filter == selectedFilter;
             return GestureDetector(
               onTap: () {
                 onFilterSelected(filter);
-                // Aquí puedes llamar a la función onActivitySelected si es necesario
-                // widget.onActivitySelected?.call(selectedActivity); // Asegúrate de que selectedActivity esté definido
               },
               child: Container(
                 padding: EdgeInsets.zero,

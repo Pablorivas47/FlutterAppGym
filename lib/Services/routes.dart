@@ -5,7 +5,6 @@ import 'package:flutter_application_1/Screens/admin/admin_profile.dart';
 import 'package:flutter_application_1/Screens/forget_password.dart';
 import 'package:flutter_application_1/Screens/user/home/gyms.dart';
 import 'package:flutter_application_1/Screens/user/home/home.dart';
-import 'package:flutter_application_1/Screens/user/home/location.dart';
 import 'package:flutter_application_1/Screens/user/home/payment_methods.dart';
 import 'package:flutter_application_1/Screens/user/home/shifts.dart';
 import 'package:flutter_application_1/Screens/login.dart';
@@ -18,6 +17,13 @@ import 'package:flutter_application_1/Screens/user/profile.dart';
 import 'package:flutter_application_1/components/custom_navigation_bar.dart';
 import 'package:flutter_application_1/components/custom_bottom_navigation_bar.dart';
 import 'package:flutter_application_1/Screens/user/components/user_screen.dart';
+
+class Routes {
+  // ignore: constant_identifier_names
+  static const HOME = '/home';
+  // ignore: constant_identifier_names
+  static const PERMISSION = '/requestPermissionPage';
+}
 
 final Map<String, WidgetBuilder> routes = {
   //---------------------------   General Routes  ---------------------------
@@ -44,9 +50,6 @@ final Map<String, WidgetBuilder> routes = {
   },
   '/passwordAndSecurity': (context) {
     return const PasswordAndSecurity();
-  },
-  '/location': (context) {
-    return const LocationMaps();
   },
   //---------------------------   User Routes  ---------------------------
 

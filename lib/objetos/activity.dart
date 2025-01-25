@@ -11,7 +11,6 @@ class Activity {
 
   static Future<Activity> fromFirestoreAct(DocumentSnapshot doc) async {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
     Map<String, List<dynamic>> priceMap = {};
 
     if (data['price'] != null) {

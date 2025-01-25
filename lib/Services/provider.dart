@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Services/firebase_service.dart';
 import 'package:flutter_application_1/objetos/exercises.dart';
@@ -30,6 +32,7 @@ class ProviderService with ChangeNotifier {
     }
   }
 
+  // Getter para el Stream
   Future<void> providerGetAdminAndGymData() async {
     try {
       _adminGymData = await getAdminAndGymData();
@@ -80,21 +83,47 @@ class ProviderService with ChangeNotifier {
     }
   }
 
-  // Método para filtrar ejercicios
-  Future<void> providerGetFilteredExercises(
-      String query, int selectedExercise) async {
+  TextEditingController filterExercisesController = TextEditingController();
+  int selectedExercise = 0; // Valor por defecto
+
+  ProviderService() {
+    // Constructor de provider
+    // Escuchar cambios en el filtro de texto
+    filterGymController.addListener(() {
+      providerGetFilteredGyms();
+    });
+
+    providerGetFilteredGyms();
+
+    filterExercisesController.addListener(() {
+      providerGetFilteredExercises();
+    });
+  }
+
+  void setSelectedExercise(int selected) {
+    selectedExercise = selected;
+    notifyListeners(); // Notificar a los listeners sobre el cambio
+    providerGetFilteredExercises(); // Filtrar ejercicios cada vez que se cambia el ejercicio seleccionado
+  }
+
+  // Método para obtener los ejercicios filtrados
+  Future<void> providerGetFilteredExercises() async {
     try {
-      if (_exercisesData == null) {
-        await providerGetExercises(); // Asegúrate de que los datos están disponibles
-      }
-      // Filtra los ejercicios basados en el texto ingresado
+      // Asegúrate de que los datos de ejercicios estén disponibles
+      await providerGetExercises();
+      await providerGetGymsAndActivities();
+
+      // Filtrar los ejercicios basados en el grupo muscular (selectedExercise) y el texto ingresado
       final allExercises = _exercisesData?[selectedExercise].exercises ?? [];
+
       _filteredExercises = allExercises.where((exercise) {
-        final exerciseName = exercise.toLowerCase();
-        return exerciseName.contains(query.toLowerCase());
+        final exerciseName = exercise
+            .toLowerCase(); // Asegúrate que sea en minúsculas para comparar
+        return exerciseName
+            .contains(filterExercisesController.text.toLowerCase());
       }).toList();
 
-      notifyListeners(); // Notifica a los listeners sobre el cambio
+      notifyListeners(); // Notificar cambios a la UI
     } catch (e) {
       print("Error filtering exercises: $e");
     }
@@ -102,19 +131,81 @@ class ProviderService with ChangeNotifier {
 
   List<dynamic> _filteredGym = [];
   List<dynamic> get filteredGym => _filteredGym;
+  TextEditingController filterGymController = TextEditingController();
+  String selectedActivity = 'Todos'; // Valor por defecto
 
-  Future<void> providerGetFilteredGyms(String query, String? activity) async {
+  void setSelectedGym(String selected) {
+    selectedActivity = selected;
+    notifyListeners(); // Notificar a los listeners sobre el cambio
+    providerGetFilteredGyms(); // Filtrar ejercicios cada vez que se cambia el ejercicio seleccionado
+  }
+
+  // String query, String? activity
+  Future<void> providerGetFilteredGyms() async {
     // Asegúrate de cargar los datos de los gimnasios primero
     await providerGetGymsAndActivities();
+    await providerLoadActivities();
 
     // Filtra los gimnasios por nombre y actividad
     _filteredGym = gymsAndActivities!.where((gym) {
-      final matchesActivity = activity == null ||
-          gym.activities.any((activityItem) => activityItem.name == activity);
-      final matchesQuery = gym.name.toLowerCase().contains(query.toLowerCase());
+      final matchesActivity = selectedActivity == 'Todos' ||
+          gym.activities
+              .any((activityItem) => activityItem.name == selectedActivity);
+      final matchesQuery = gym.name
+          .toLowerCase()
+          .contains(filterGymController.text.toLowerCase());
       return matchesActivity && matchesQuery;
     }).toList();
 
     notifyListeners();
   }
+
+  List<String> _activities = [];
+  List<String> get activities => _activities;
+
+  Future<void> providerLoadActivities() async {
+    try {
+      _activities = await loadActivities();
+      notifyListeners();
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error getting user data: $e");
+    }
+  }
+
+  Future<void> providerAddLoadedRoutine(
+      String nameRoutine,
+      String exerciseName,
+      int repetitions,
+      int series,
+      String observations,
+      String muscleGroup) async {
+    try {
+      await addLoadedRoutine(
+          nameRoutine: nameRoutine,
+          exerciseName: exerciseName,
+          repetitions: repetitions,
+          series: series,
+          observations: observations,
+          muscleGroup: muscleGroup);
+      notifyListeners();
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error getting user data: $e");
+    }
+  }
+
+  TextEditingController searchController = TextEditingController();
+
+  Future<void> providerDeleteRoutine(String routineId) async {
+    try {
+      await deleteRoutine(routineId);
+      notifyListeners();
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error getting user data: $e");
+    }
+  }
+
+  // Stream que emite la lista de rutinas
 }

@@ -50,6 +50,9 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   firebase_storage: ^12.1.3
   flutter_svg: ^2.0.10+1
+  permission_handler: ^11.3.1
+  location: ^7.0.1
+  geolocator: ^13.0.2
 
 
 
@@ -83,6 +86,7 @@ flutter:
      - assets/icons/c.svg
      - assets/icons/w-black.png
      - assets/icons/w-white.png
+     - assets/json/activities.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

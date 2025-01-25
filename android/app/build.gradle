@@ -70,4 +70,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics' // Firebase Analytics
     implementation 'com.google.firebase:firebase-auth:23.0.0' // Firebase Auth
     implementation 'com.google.firebase:firebase-firestore:24.0.0' // Firebase Firestore
+    implementation 'com.google.android.gms:play-services-maps:17.0.0' //google maps
 }
